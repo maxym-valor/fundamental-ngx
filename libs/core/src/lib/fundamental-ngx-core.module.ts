@@ -89,6 +89,7 @@ import { DynamicPageModule } from './dynamic-page/dynamic-page.module';
 import { StatusIndicatorModule } from './status-indicator/status-indicator.module';
 import { GridListModule } from './grid-list/grid-list.module';
 import { FacetModule } from './facets/facet.module';
+import { ResizableCardLayoutModule } from './resizable-card-layout/resizable-card-layout.module';
 
 @NgModule({
     imports: [CommonModule, FormsModule],
@@ -178,7 +179,8 @@ import { FacetModule } from './facets/facet.module';
         OnlyDigitsModule,
         IllustratedMessageModule,
         StatusIndicatorModule,
-        GridListModule
+        GridListModule,
+        ResizableCardLayoutModule
     ],
     providers: [AlertService, DialogService, NotificationService, MessageToastService, ThemesService]
 })

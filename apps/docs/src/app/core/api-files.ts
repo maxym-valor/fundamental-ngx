@@ -351,5 +351,10 @@ export const API_FILES = {
         'GridListItemToolbarComponent',
         'GridListGroupHeaderComponent'
     ],
-    statusIndicator: ['StatusIndicatorComponent']
+    statusIndicator: ['StatusIndicatorComponent'],
+    resizableCardLayout: [
+        'ResizableCardLayoutComponent',
+        'ResizableCardItemComponent',
+        'ResizableCardDefinitionDirective'
+    ]
 };

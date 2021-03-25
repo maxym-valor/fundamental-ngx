@@ -13,7 +13,6 @@ import {
     OnInit,
     Output,
     QueryList,
-    ViewChild,
     ViewEncapsulation
 } from '@angular/core';
 import { FocusKeyManager } from '@angular/cdk/a11y';
@@ -22,7 +21,7 @@ import { Subject } from 'rxjs';
 
 import {
     CardDropped,
-    HorizontalResizeStep,
+    horizontalResizeStep,
     gap,
     ResizingEvent,
     ResizedEvent,
@@ -257,31 +256,39 @@ export class ResizableCardLayoutComponent implements OnInit, AfterViewInit, Afte
 
     /** @hidden Sets number of column in layout, based on LayoutSize passed */
     private _setLayoutColumns(layoutSize: LayoutSize): void {
+        let layoutWidthDefault: number;
+
         switch (layoutSize) {
             case 'sm':
                 this._columns = 1;
                 this._paddingLeft = 8;
-                this.layoutWidth = this._columns * HorizontalResizeStep + 2 * this._paddingLeft;
+
+                layoutWidthDefault = this._columns * horizontalResizeStep + 2 * this._paddingLeft;
+                this.layoutWidth = layoutWidthDefault;
                 break;
             case 'md':
                 this._columns = 2;
                 this._paddingLeft = 16;
-                this.layoutWidth = this._columns * HorizontalResizeStep + 2 * this._paddingLeft + gap;
+                layoutWidthDefault = this._columns * horizontalResizeStep + 2 * this._paddingLeft;
+                this.layoutWidth = layoutWidthDefault + gap;
                 break;
             case 'lg':
                 this._columns = 3;
                 this._paddingLeft = 16;
-                this.layoutWidth = this._columns * HorizontalResizeStep + 2 * this._paddingLeft + 2 * gap;
+                layoutWidthDefault = this._columns * horizontalResizeStep + 2 * this._paddingLeft;
+                this.layoutWidth = layoutWidthDefault + 2 * gap;
                 break;
             case 'xl':
                 this._columns = 4;
                 this._paddingLeft = 48;
-                this.layoutWidth = this._columns * HorizontalResizeStep + 2 * this._paddingLeft + 3 * gap;
+                layoutWidthDefault = this._columns * horizontalResizeStep + 2 * this._paddingLeft;
+                this.layoutWidth = layoutWidthDefault + 3 * gap;
                 break;
             default:
                 this._columns = 4;
                 this._paddingLeft = 48;
-                this.layoutWidth = this._columns * HorizontalResizeStep + 2 * this._paddingLeft + 3 * gap;
+                layoutWidthDefault = this._columns * horizontalResizeStep + 2 * this._paddingLeft;
+                this.layoutWidth = layoutWidthDefault + 3 * gap;
         }
         this._cd.detectChanges();
     }
@@ -295,9 +302,9 @@ export class ResizableCardLayoutComponent implements OnInit, AfterViewInit, Afte
 
     /** @hidden updates array with new column heights */
     private _updateColumnsHeight(card: ResizableCardItemComponent): void {
-        const columnsStart = Math.floor(card.left / HorizontalResizeStep);
+        const columnsStart = Math.floor(card.left / horizontalResizeStep);
         // till which columns card spans
-        const columnsSpan = Math.floor((card.left + card.cardWidth) / HorizontalResizeStep);
+        const columnsSpan = Math.floor((card.left + card.cardWidth) / horizontalResizeStep);
         const columnHeight = card.cardHeight + card.top;
 
         for (let i = columnsStart; i < columnsSpan; i++) {
@@ -335,7 +342,7 @@ export class ResizableCardLayoutComponent implements OnInit, AfterViewInit, Afte
      * @hidden try to set card at given height
      */
     private _isPositionSetSuccess(height: number, card: ResizableCardItemComponent): boolean {
-        const columnPositions = new Array();
+        const columnPositions = [];
         let index = 0;
         for (const columnHeight of this._columnsHeight) {
             index++;
@@ -359,7 +366,7 @@ export class ResizableCardLayoutComponent implements OnInit, AfterViewInit, Afte
         if (startingColumnPosition !== -1) {
             isFitting = true;
             card.left =
-                startingColumnPosition * HorizontalResizeStep +
+                startingColumnPosition * horizontalResizeStep +
                 this._paddingLeft +
                 (startingColumnPosition > 0 ? verticalResizeStep * startingColumnPosition : 0);
             card.top = height + (height > 0 ? verticalResizeStep : 0);
@@ -375,26 +382,83 @@ export class ResizableCardLayoutComponent implements OnInit, AfterViewInit, Afte
         let startingColumnPosition = -1;
 
         // start from previous indexes
-        const cardColSpan = Math.floor(card.cardWidth / HorizontalResizeStep);
+        const cardColSpan = Math.floor(card.cardWidth / horizontalResizeStep);
 
         // try to set towards left from available card position
         // eg. [1, 2, 3, 4] columnsPositions
         for (const columnPosition of columnPositions) {
-            if (!isFitting) {
-                // columnPosition-1 ->convert as index
-                // columnPosition -1 - (numberOfCardColumns -1) at least 1 column of card on current column
-                for (let i = columnPosition - cardColSpan; i < columnPosition - 1 && i > -1 && !isFitting; i++) {
-                    // if previous column heights are less then card will fix starting from previous columns as well
-                    if (this._columnsHeight[i] > this._columnsHeight[columnPosition - 1]) {
+            if (isFitting) {
+                break;
+            }
+
+            // columnPosition-1 ->convert as index
+            // columnPosition -1 - (numberOfCardColumns -1) at least 1 column of card on current column
+            for (let i = columnPosition - cardColSpan; i < columnPosition - 1 && i > -1 && !isFitting; i++) {
+                // if previous column heights are less then card will fix starting from previous columns as well
+                if (this._columnsHeight[i] > this._columnsHeight[columnPosition - 1]) {
+                    isFitting = false;
+                    startingColumnPosition = -1;
+                } else {
+                    isFitting = true;
+                    startingColumnPosition = i;
+                    if (startingColumnPosition + cardColSpan > this._columns) {
+                        isFitting = false;
+                        startingColumnPosition = -1;
+                    }
+
+                    // is whole width of card will fit
+                    for (let columnIndex = 0; columnIndex < cardColSpan; columnIndex++) {
+                        if (
+                            this._columnsHeight[columnIndex + startingColumnPosition] >
+                            this._columnsHeight[columnPosition - 1]
+                        ) {
+                            // not full width is fitting
+                            isFitting = false;
+                            startingColumnPosition = -1;
+                        }
+                    }
+                }
+            }
+        }
+        return startingColumnPosition;
+    }
+
+    /** @hidden Try to fit right from the position */
+    private _fitRight(card: ResizableCardItemComponent, columnPositions: Array<number>, height: number): number {
+        // check for each card position, starting from leftmost
+        let isFitting = false;
+        let startingColumnPosition = -1;
+
+        // start from previous indexes
+        const cardColSpan = Math.floor(card.cardWidth / horizontalResizeStep);
+
+        for (const columnPosition of columnPositions) {
+            if (isFitting) {
+                break;
+            }
+
+            if (height === 0 && cardColSpan + columnPosition - 1 <= this._columns && !isFitting) {
+                isFitting = true;
+                startingColumnPosition = columnPosition - 1;
+                break;
+            }
+
+            // if card spans more than available columns. then it will not fit.
+            if (columnPosition + cardColSpan - 1 > this._columns) {
+                isFitting = false;
+                startingColumnPosition = -1;
+                break;
+            }
+
+            if (cardColSpan > 1) {
+                // one column is at columnPosition. check rest card width also fit at this height.
+                for (let i = cardColSpan - 1; i > 0 && !isFitting; i--) {
+                    if (this._columnsHeight[columnPosition - 1 + i] > this._columnsHeight[columnPosition - 1]) {
                         isFitting = false;
                         startingColumnPosition = -1;
                     } else {
                         isFitting = true;
-                        startingColumnPosition = i;
-                        if (startingColumnPosition + cardColSpan > this._columns) {
-                            isFitting = false;
-                            startingColumnPosition = -1;
-                        }
+                        startingColumnPosition = columnPosition - 1;
 
                         // is whole width of card will fit
                         for (let columnIndex = 0; columnIndex < cardColSpan; columnIndex++) {
@@ -410,63 +474,8 @@ export class ResizableCardLayoutComponent implements OnInit, AfterViewInit, Afte
                     }
                 }
             } else {
-                break;
-            }
-        }
-        return startingColumnPosition;
-    }
-
-    /** @hidden Try to fit right from the position */
-    private _fitRight(card: ResizableCardItemComponent, columnPositions: Array<number>, height: number): number {
-        // check for each card position, starting from leftmost
-        let isFitting = false;
-        let startingColumnPosition = -1;
-
-        // start from previous indexes
-        const cardColSpan = Math.floor(card.cardWidth / HorizontalResizeStep);
-
-        for (const columnPosition of columnPositions) {
-            if (!isFitting) {
-                if (height === 0 && cardColSpan + columnPosition - 1 <= this._columns && !isFitting) {
-                    isFitting = true;
-                    startingColumnPosition = columnPosition - 1;
-                    break;
-                }
-
-                // if card spans more than available columns. then it will not fit.
-                if (columnPosition + cardColSpan - 1 > this._columns) {
-                    isFitting = false;
-                    startingColumnPosition = -1;
-                    break;
-                }
-
-                if (cardColSpan > 1) {
-                    // one column is at columnPosition. check rest card width also fit at this height.
-                    for (let i = cardColSpan - 1; i > 0 && !isFitting; i--) {
-                        if (this._columnsHeight[columnPosition - 1 + i] > this._columnsHeight[columnPosition - 1]) {
-                            isFitting = false;
-                            startingColumnPosition = -1;
-                        } else {
-                            isFitting = true;
-                            startingColumnPosition = columnPosition - 1;
-
-                            // is whole width of card will fit
-                            for (let columnIndex = 0; columnIndex < cardColSpan; columnIndex++) {
-                                if (
-                                    this._columnsHeight[columnIndex + startingColumnPosition] >
-                                    this._columnsHeight[columnPosition - 1]
-                                ) {
-                                    // not full width is fitting
-                                    isFitting = false;
-                                    startingColumnPosition = -1;
-                                }
-                            }
-                        }
-                    }
-                } else {
-                    isFitting = true;
-                    startingColumnPosition = columnPosition - 1;
-                }
+                isFitting = true;
+                startingColumnPosition = columnPosition - 1;
             }
         }
 
@@ -477,7 +486,7 @@ export class ResizableCardLayoutComponent implements OnInit, AfterViewInit, Afte
     private _getSortedUniqueHeights(): number[] {
         const tempArray = this._columnsHeight.slice();
         const sortedColumnsHeightArray = tempArray.sort(comparer);
-        const uniqueHeights = new Array();
+        const uniqueHeights = [];
 
         for (const sortedHeight of sortedColumnsHeightArray) {
             if (uniqueHeights.indexOf(sortedHeight) === -1) {

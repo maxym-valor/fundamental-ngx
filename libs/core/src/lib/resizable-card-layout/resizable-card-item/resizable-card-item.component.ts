@@ -270,7 +270,7 @@ export class ResizableCardItemComponent implements OnInit, OnDestroy, FocusableO
         }
 
         // Emit resizing event on some interval. improves performance.
-        this._resizeDebounce$.next(new PositionChange(this._prevX - event.clientX, this._prevY - event.clientY));
+        this._resizeDebounce$.next(new PositionChange(this._prevX - clientX, this._prevY - clientY));
 
         const heightDiff = Math.abs(this.cardHeight - this._prevCardHeight);
         const widthDiff = Math.abs(this.cardWidth - this._prevCardWidth);
@@ -283,8 +283,8 @@ export class ResizableCardItemComponent implements OnInit, OnDestroy, FocusableO
             this.stepChange.emit(this._getResizedEventObject());
         }
 
-        this._prevX = event.clientX;
-        this._prevY = event.clientY;
+        this._prevX = clientX;
+        this._prevY = clientY;
     }
 
     /**

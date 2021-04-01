@@ -28,9 +28,7 @@ export class ResizableCardLayoutExampleComponent implements OnInit {
         });
     }
 
-    onCardResizing(event: ResizingEvent): void {
-        console.log('onCardResizing event emitted: ', event);
-    }
+    onCardResizing(event: ResizingEvent): void {}
 
     onCardResized(event: ResizedEvent): void {
         console.log('onCardResized event emitted: ', event);

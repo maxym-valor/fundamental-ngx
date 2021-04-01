@@ -62,7 +62,7 @@ describe('ResizableCardItemComponent', () => {
         fixture.detectChanges();
 
         expect(card.cardWidth).toEqual(656);
-        expect(card.cardHeight).toEqual(432);
+        expect(card.cardHeight).toEqual(416);
     });
 
     it('should decrease width in step of 20 rem and height in step of 1rem', () => {
@@ -77,7 +77,7 @@ describe('ResizableCardItemComponent', () => {
         fixture.detectChanges();
 
         expect(card.cardWidth).toEqual(320);
-        expect(card.cardHeight).toEqual(272);
+        expect(card.cardHeight).toEqual(288);
     });
 
     it('should emit resized event when resizing is completed', () => {
@@ -124,7 +124,7 @@ describe('ResizableCardItemComponent', () => {
         fixture.detectChanges();
 
         expect(card.cardWidth).toEqual(656);
-        expect(card.cardHeight).toEqual(336);
+        expect(card.cardHeight).toEqual(320);
         expect(stepChanged).toHaveBeenCalled();
     });
 
@@ -158,7 +158,7 @@ describe('ResizableCardItemComponent', () => {
         fixture.detectChanges();
 
         expect(card.cardWidth).toEqual(656);
-        expect(card.cardHeight).toEqual(272);
+        expect(card.cardHeight).toEqual(288);
         expect(stepChanged).toHaveBeenCalled();
     });
 
@@ -176,7 +176,7 @@ describe('ResizableCardItemComponent', () => {
 
         expect(card.cardWidth).toEqual(656);
         expect(card.cardHeight).toEqual(304);
-        expect(stepChanged).not.toHaveBeenCalled();
+        expect(stepChanged).toHaveBeenCalled();
     });
 
     it('should revert back the resize when height resize offset is not reached', () => {
@@ -193,7 +193,7 @@ describe('ResizableCardItemComponent', () => {
 
         expect(card.cardWidth).toEqual(656);
         expect(card.cardHeight).toEqual(304);
-        expect(stepChanged).not.toHaveBeenCalled();
+        expect(stepChanged).toHaveBeenCalled();
     });
 
     it('should adjust max card width 320 for sm layout size', () => {

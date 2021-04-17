@@ -35,6 +35,7 @@ import {
 const DRAG_START_DELAY = 500;
 const AnimationDuration = '750ms';
 export type LayoutSize = 'sm' | 'md' | 'lg' | 'xl';
+export type MoveDirection = 1 | -1; // move border card down or up, while resizing
 export type ResizableCardLayoutConfig = Array<ResizableCardItemConfig>;
 
 @Component({
@@ -134,7 +135,10 @@ export class ResizableCardLayoutComponent implements OnInit, AfterViewInit, Afte
     /** @hidden */
     private _layoutShifted = false;
 
-    constructor(private readonly _cd: ChangeDetectorRef, private readonly _elementRef: ElementRef) {}
+    /** @hidden */
+    private _currentResizingCard: ResizableCardItemComponent;
+
+    constructor(private readonly _cd: ChangeDetectorRef, private readonly _elementRef: ElementRef) { }
 
     /** @hidden */
     ngOnInit(): void {
@@ -206,7 +210,9 @@ export class ResizableCardLayoutComponent implements OnInit, AfterViewInit, Afte
      */
     cardResizing(event: ResizedEvent): void {
         this.resizing.emit(event);
+        // TODO: do not assign again and again
         const resizingCard: ResizableCardItemComponent = event.card;
+        this._currentResizingCard = event.card;
 
         // when increasing width hit the offset, show extended border and start pushing down border cards
         // when width is decreasing , show extended border till it reaches to offset. then don't. and push border cards up
@@ -223,14 +229,15 @@ export class ResizableCardLayoutComponent implements OnInit, AfterViewInit, Afte
             console.log('card width has increased from _prevWidth');
             console.log('event.card.cardState: ', event.card.cardState);
             console.log('event.cardWidth - event.prevCardWidth: ', event.cardWidth - event.prevCardWidth);
+            console.log('event.cardWidth: ', event.cardWidth);
+            console.log('event.prevCardWidth: ', event.prevCardWidth);
             console.log('layoutShifted; ', this._layoutShifted);
             // card width increasing currently
             if (
                 event.card.cardState === 1 &&
                 event.cardWidth - event.prevCardWidth >= horizontalResizeOffset &&
-                !this._startAnimation
+                !this._layoutShifted
             ) {
-                this._startAnimation = true;
                 console.log('currently card is increasing and reached offset this._sortedCards: ', this._sortedCards);
 
                 // index of this card, then get next card. exchange ranks
@@ -248,14 +255,16 @@ export class ResizableCardLayoutComponent implements OnInit, AfterViewInit, Afte
                             // get cards with top > current top , but minimum of it
                             // exchange rank with these card
                             // if only in next top, one card is taking full columns
-                            console.log('rank sorted cards before moving card down: ', this._sortedCards);
-                            this._moveCardDown(index);
+                            console.log('rank sorted cards before moving card down: ', this._sortedCards.slice());
+                            this._moveCard(index, 1);
                             this._layoutShifted = true;
-                            console.log('rank sorted cards after moving card down: ', this._sortedCards);
-                            console.log('rank previous sorted cards after moving card down: ', this._previousCards);
+                            console.log('rank sorted cards after moving card down: ', this._sortedCards.slice());
+                            console.log('rank previous sorted cards after moving card down: ', this._previousCards.slice());
                         }
                     }
                 });
+
+                this._layoutShifted = true;
                 console.log('initiate cardResizeComplete: ');
                 this.arrangeCards(this._sortedCards);
                 this.resized.emit(event);
@@ -269,11 +278,31 @@ export class ResizableCardLayoutComponent implements OnInit, AfterViewInit, Afte
                 console.log('currently card is decreasing and reached offset: ');
                 // move up the cards, if it was shifted while increasing the width
 
-                this._layoutShifted = false;
-                this._sortedCards = this._previousCards;
+                this.resizeCardItems.forEach((card: ResizableCardItemComponent, index: number) => {
+                    if (index > currentResizingItemIndex) {
+                        // console.log('currentCard: ', card);
+                        // if there are some cards on same height. make the current card rank higher than these.
+                        // otherwise next index where it will fit. until any card has less column span than total columns
+                        if (
+                            card.startingColumnPosition + card.cardWidthColSpan === this._columns &&
+                            card.cardWidthColSpan !== this._columns
+                        ) {
+                            // get cards with top > current top , but minimum of it
+                            // exchange rank with these card
+                            // if only in next top, one card is taking full columns
+                            console.log('rank sorted cards before moving card down: ', this._sortedCards);
+                            this._moveCard(index, -1);
+                            this._layoutShifted = false;
+                            console.log('rank sorted cards after moving card down: ', this._sortedCards);
+                            console.log('rank previous sorted cards after moving card down: ', this._previousCards);
+                        }
+                    }
+                });
+                // this._sortedCards = this._previousCards;
                 console.log('while decreasing this._previousCards: ', this._previousCards);
                 console.log('initiate cardResizeComplete: ');
-                this.arrangeCards(this._sortedCards);
+                this.arrangeCards(this.resizeCardItems.toArray());
+                this._cd.detectChanges();
                 this.resized.emit(event);
             }
 
@@ -293,7 +322,7 @@ export class ResizableCardLayoutComponent implements OnInit, AfterViewInit, Afte
      * @param event
      */
 
-    private _moveCardDown(currentCardIndex: number): void {
+    private _moveCard(currentCardIndex: number, moveDirection: MoveDirection): void {
         // taking width of adjacent card col-span into account
 
         // eg: 4 columns - 2 col(adjacent card) = 2 positions can exchange ranks
@@ -345,7 +374,8 @@ export class ResizableCardLayoutComponent implements OnInit, AfterViewInit, Afte
      * Handles arrangement of cards in layout
      */
     cardResizeComplete(event: ResizedEvent): void {
-        this._startAnimation = false;
+        this._layoutShifted = false;
+        this._currentResizingCard = null;
         this.arrangeCards(this.resizeCardItems.toArray());
         this.resized.emit(event);
     }
@@ -459,11 +489,13 @@ export class ResizableCardLayoutComponent implements OnInit, AfterViewInit, Afte
     private _updateColumnsHeight(card: ResizableCardItemComponent): void {
         const columnsStart = Math.floor(card.left / horizontalResizeStep);
 
+        // Get width of current card resizing and assign width here for that card
+
         const cardBaseColSpan = Math.floor(card.cardWidth / horizontalResizeStep);
         // till which columns card spans
         const columnsSpan =
-            card.cardWidth - cardBaseColSpan * horizontalResizeStep >= horizontalResizeOffset
-                ? cardBaseColSpan + 1
+            card.cardWidth - cardBaseColSpan * horizontalResizeStep - (cardBaseColSpan - 1) * gap >= horizontalResizeOffset
+                ? cardBaseColSpan + 1 // TODO: to check what should be card column span
                 : cardBaseColSpan;
 
         // const columnsSpan = Math.floor(
@@ -491,6 +523,13 @@ export class ResizableCardLayoutComponent implements OnInit, AfterViewInit, Afte
      * @hidden Try to set card at available heights
      */
     private _setCardPositionValues(card: ResizableCardItemComponent, index: number): void {
+        console.log('---- 1. Rank of current resizing: ', this._currentResizingCard?.title);
+        console.log('---- 2. Rank of current position set card: ', card.title);
+        if (this._currentResizingCard?.title === card.title) {
+            console.log('setting current resizing card width: ', card);
+            card.cardWidth = this._currentResizingCard.cardWidth;
+        }
+
         if (index === 0) {
             card.left = 0 + this._paddingLeft;
             card.top = 0;

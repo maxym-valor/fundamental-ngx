@@ -182,8 +182,10 @@ export class ResizableCardItemComponent implements OnInit, OnDestroy, FocusableO
 
     /** Denotes if card is currently expanding or contracting horizontally */
     // +1 denotes increasing, -1 denotes decreasing and 0 denotes card-state has not changed horizontally
-
     cardState: CardState = 0;
+
+    /** Change in rank from previous value*/
+    prevRank = 0;
 
     /** @hidden Helps in emitting resizing event at a given interval */
     private _resizeDebounce$: Subject<PositionChange> = new Subject<PositionChange>();
@@ -295,17 +297,11 @@ export class ResizableCardItemComponent implements OnInit, OnDestroy, FocusableO
         } else if (clientX < this._prevX) {
             // decreasing width
             this.cardState = -1;
-            console.log('ResizableCardItemComponent width decreasing');
-            console.log('ResizableCardItemComponent width decreasing this.cardWidth: ', this.cardWidth);
-            console.log('ResizableCardItemComponent width decreasing cardWidthColumn: ', cardWidthColumn);
             if (horizontalResizeThresholdReached) {
-                console.log('ResizableCardItemComponent width decreasing threshold reached');
                 const cardSpan = Math.floor(this.cardWidth / horizontalResizeStep);
                 const futureCardWidth = (cardSpan + 1) * horizontalResizeStep + cardSpan * gap;
                 this.resizeIndicationBorderWidth = futureCardWidth - this.cardWidth;
-                console.log('AAAA ResizableCardItemComponent border width: ', this.resizeIndicationBorderWidth);
             } else {
-                console.log('BBBB ResizableCardItemComponent border width: ', this.resizeIndicationBorderWidth);
                 this.resizeIndicationBorderWidth = 0;
             }
         }
@@ -423,6 +419,7 @@ export class ResizableCardItemComponent implements OnInit, OnDestroy, FocusableO
         this.cardHeightRowSpan = this._config?.cardHeightRowSpan || this.cardHeightRowSpan;
         this.title = this._config?.title || this.title;
         this.rank = this._config?.rank || this.rank;
+        this.prevRank = -1;
         this.cardMiniHeaderRowSpan = this._config?.cardMiniHeaderRowSpan || this.cardMiniHeaderRowSpan;
         this.cardMiniContentRowSpan = this._config?.cardMiniContentRowSpan || this.cardMiniContentRowSpan;
         this.resizable = this._config.resizable || this.resizable;

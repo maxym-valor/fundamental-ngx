@@ -14,51 +14,30 @@
 
         <fd-dialog-body class="fd-docs-cursor">
             <div class="fd-docs-center-align">
-                <fd-resizable-card-layout
-                    [layoutSize]="layoutSize"
-                    (resizing)="onCardResizing($event)"
-                    (resized)="onCardResized($event)"
-                    (stepChange)="onStepChange($event)"
+                <fd-resizable-card-layout [layoutSize]="layoutSize" (stepChange)="onStepChange($event)"
                     (miniHeaderReached)="onMiniHeaderReached($event)"
-                    (miniContentReached)="onMiniContentReached($event)"
-                >
-                    <fd-resizable-card-item
-                        title="card1"
-                        [rank]="1"
-                        [cardWidthColSpan]="1"
-                        [cardHeightRowSpan]="25"
-                        [cardMiniHeaderRowSpan]="5"
-                        [cardMiniContentRowSpan]="10"
-                    >
+                    (miniContentReached)="onMiniContentReached($event)">
+                    <fd-resizable-card-item title="card1" [rank]="1" [cardWidthColSpan]="1" [cardHeightRowSpan]="20"
+                        [cardMiniHeaderRowSpan]="miniHeaderRowSpan" [cardMiniContentRowSpan]="miniContentRowSpan">
                         <fd-card>
                             <fd-card-header>
                                 <h2 fd-card-title>Card Title 1</h2>
                             </fd-card-header>
                             <fd-card-content>
                                 <ul fd-list [noBorder]="true">
-                                    <li fd-list-item>
-                                        <span fd-list-title> item 1 </span>
-                                    </li>
-                                    <li fd-list-item>
-                                        <span fd-list-title> item 2 </span>
-                                    </li>
-                                    <li fd-list-item>
-                                        <span fd-list-title> item 3 </span>
-                                    </li>
+                                    <ng-container *ngFor="let data of card1Data">
+                                        <li fd-list-item>
+                                            <span fd-list-title> item {{ data }} </span>
+                                        </li>
+                                    </ng-container>
                                 </ul>
                             </fd-card-content>
                         </fd-card>
                     </fd-resizable-card-item>
 
-                    <fd-resizable-card-item
-                        title="card2"
-                        [rank]="2"
-                        [cardWidthColSpan]="1"
-                        [cardHeightRowSpan]="19"
-                        [cardMiniHeaderRowSpan]="5"
-                        [cardMiniContentRowSpan]="8"
-                        [resizable]="true"
-                    >
+                    <fd-resizable-card-item title="card2" [rank]="2" [cardWidthColSpan]="1" [cardHeightRowSpan]="19"
+                        [cardMiniHeaderRowSpan]="miniHeaderRowSpan" [cardMiniContentRowSpan]="miniContentRowSpan"
+                        [resizable]="false">
                         <fd-card>
                             <fd-card-header>
                                 <h2 fd-card-title>Card Title 2 - Non Resizable</h2>
@@ -79,42 +58,49 @@
                         </fd-card>
                     </fd-resizable-card-item>
 
-                    <fd-resizable-card-item
-                        title="card3"
-                        [rank]="3"
-                        [cardWidthColSpan]="2"
-                        [cardHeightRowSpan]="14"
-                        [cardMiniHeaderRowSpan]="5"
-                        [cardMiniContentRowSpan]="8"
-                    >
+                    <fd-resizable-card-item title="card3" [rank]="3" [cardWidthColSpan]="2" [cardHeightRowSpan]="20"
+                        [cardMiniHeaderRowSpan]="miniHeaderRowSpan" [cardMiniContentRowSpan]="miniContentRowSpan">
                         <fd-card>
                             <fd-card-header>
                                 <h2 fd-card-title>Card Title 3</h2>
                             </fd-card-header>
                             <fd-card-content>
-                                <ul fd-list [noBorder]="true">
-                                    <li fd-list-item>
-                                        <span fd-list-title> item 1 </span>
-                                    </li>
-                                    <li fd-list-item>
-                                        <span fd-list-title> item 2 </span>
-                                    </li>
-                                    <li fd-list-item>
-                                        <span fd-list-title> item 3 </span>
-                                    </li>
-                                </ul>
+                                <table fd-table>
+                                    <thead fd-table-header>
+                                        <tr fd-table-row>
+                                            <ng-container *ngFor="let column of card3TableColumns">
+                                                <th fd-table-cell>{{ column }}</th>
+                                            </ng-container>
+                                        </tr>
+                                    </thead>
+                                    <tbody fd-table-body>
+                                        <tr *ngFor="let row of card3TableData" fd-table-row>
+                                            <td fd-table-cell>{{ row.name }}</td>
+                                            <td fd-table-cell>{{ row.type }}</td>
+
+                                            <ng-container *ngIf="card3TableColumns.length >= 4">
+                                                <td fd-table-cell>{{ row.region }}</td>
+                                                <td fd-table-cell>{{ row.rate }}</td>
+                                            </ng-container>
+
+                                            <ng-container *ngIf="card3TableColumns.length >= 6">
+                                                <td fd-table-cell>{{ row.quantity }}</td>
+                                                <td fd-table-cell>{{ row.tax }}</td>
+                                            </ng-container>
+
+                                            <ng-container *ngIf="card3TableColumns.length >=8">
+                                                <td fd-table-cell>{{ row.totalWeight }}</td>
+                                                <td fd-table-cell>{{ row.totalAmount }}</td>
+                                            </ng-container>
+                                        </tr>
+                                    </tbody>
+                                </table>
                             </fd-card-content>
                         </fd-card>
                     </fd-resizable-card-item>
 
-                    <fd-resizable-card-item
-                        title="card4"
-                        [rank]="4"
-                        [cardWidthColSpan]="2"
-                        [cardHeightRowSpan]="14"
-                        [cardMiniHeaderRowSpan]="5"
-                        [cardMiniContentRowSpan]="8"
-                    >
+                    <fd-resizable-card-item title="card4" [rank]="4" [cardWidthColSpan]="2" [cardHeightRowSpan]="14"
+                        [cardMiniHeaderRowSpan]="miniHeaderRowSpan" [cardMiniContentRowSpan]="miniContentRowSpan">
                         <fd-card>
                             <fd-card-header>
                                 <h2 fd-card-title>Card Title 4</h2>
@@ -135,14 +121,8 @@
                         </fd-card>
                     </fd-resizable-card-item>
 
-                    <fd-resizable-card-item
-                        title="card5"
-                        [rank]="5"
-                        [cardWidthColSpan]="3"
-                        [cardHeightRowSpan]="14"
-                        [cardMiniHeaderRowSpan]="5"
-                        [cardMiniContentRowSpan]="10"
-                    >
+                    <fd-resizable-card-item title="card5" [rank]="5" [cardWidthColSpan]="3" [cardHeightRowSpan]="14"
+                        [cardMiniHeaderRowSpan]="miniHeaderRowSpan" [cardMiniContentRowSpan]="miniContentRowSpan">
                         <fd-card>
                             <fd-card-header>
                                 <h2 fd-card-title>Card Title 5</h2>
@@ -163,14 +143,8 @@
                         </fd-card>
                     </fd-resizable-card-item>
 
-                    <fd-resizable-card-item
-                        title="card6"
-                        [rank]="6"
-                        [cardWidthColSpan]="4"
-                        [cardHeightRowSpan]="14"
-                        [cardMiniHeaderRowSpan]="5"
-                        [cardMiniContentRowSpan]="8"
-                    >
+                    <fd-resizable-card-item title="card6" [rank]="6" [cardWidthColSpan]="4" [cardHeightRowSpan]="14"
+                        [cardMiniHeaderRowSpan]="miniHeaderRowSpan" [cardMiniContentRowSpan]="miniContentRowSpan">
                         <fd-card>
                             <fd-card-header>
                                 <h2 fd-card-title>Card Title 6</h2>
@@ -191,14 +165,8 @@
                         </fd-card>
                     </fd-resizable-card-item>
 
-                    <fd-resizable-card-item
-                        title="card7"
-                        [rank]="7"
-                        [cardWidthColSpan]="1"
-                        [cardHeightRowSpan]="14"
-                        [cardMiniHeaderRowSpan]="5"
-                        [cardMiniContentRowSpan]="10"
-                    >
+                    <fd-resizable-card-item title="card7" [rank]="7" [cardWidthColSpan]="1" [cardHeightRowSpan]="14"
+                        [cardMiniHeaderRowSpan]="miniHeaderRowSpan" [cardMiniContentRowSpan]="miniContentRowSpan">
                         <fd-card>
                             <fd-card-header>
                                 <h2 fd-card-title>Card Title 7</h2>

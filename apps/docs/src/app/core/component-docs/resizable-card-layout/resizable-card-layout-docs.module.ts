@@ -9,6 +9,7 @@ import {
     ResizableCardLayoutModule,
     CardModule,
     ListModule,
+    TableModule,
     DialogModule,
     SegmentedButtonModule
 } from '@fundamental-ngx/core';
@@ -38,7 +39,8 @@ const routes: Routes = [
         DialogModule,
         CardModule,
         ListModule,
-        SegmentedButtonModule
+        SegmentedButtonModule,
+        TableModule
     ],
     exports: [RouterModule],
     declarations: [

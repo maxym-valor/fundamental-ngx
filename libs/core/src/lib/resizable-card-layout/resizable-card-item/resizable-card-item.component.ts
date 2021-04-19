@@ -7,14 +7,10 @@ import {
     HostBinding,
     HostListener,
     Input,
-    OnDestroy,
-    OnInit,
     Output,
     ViewEncapsulation
 } from '@angular/core';
 import { FocusableOption } from '@angular/cdk/a11y';
-import { Subject } from 'rxjs';
-import { debounceTime } from 'rxjs/operators';
 
 export type ResizeDirection = 'vertical' | 'horizontal' | 'both';
 
@@ -36,7 +32,7 @@ let cardUniqueId = 0;
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None
 })
-export class ResizableCardItemComponent implements OnInit, OnDestroy, FocusableOption {
+export class ResizableCardItemComponent implements FocusableOption {
     /** Set card properties from the config received */
     @Input()
     get config(): ResizableCardItemConfig {
@@ -133,10 +129,6 @@ export class ResizableCardItemComponent implements OnInit, OnDestroy, FocusableO
     @HostBinding('style.position')
     position = 'absolute';
 
-    /** Emits when card resize is reached to one new step in horizontal or vertical direction */
-    @Output()
-    stepChange: EventEmitter<ResizedEvent> = new EventEmitter<ResizedEvent>();
-
     /** Emits when card is still resizing */
     @Output()
     resizing: EventEmitter<ResizedEvent> = new EventEmitter<ResizedEvent>();
@@ -187,9 +179,6 @@ export class ResizableCardItemComponent implements OnInit, OnDestroy, FocusableO
     /** Change in rank from previous value*/
     prevRank = 0;
 
-    /** @hidden Helps in emitting resizing event at a given interval */
-    private _resizeDebounce$: Subject<PositionChange> = new Subject<PositionChange>();
-
     private _cardWidthColSpan: number;
     private _cardHeightRowSpan: number;
     private _cardMiniHeaderRowSpan: number;
@@ -207,19 +196,14 @@ export class ResizableCardItemComponent implements OnInit, OnDestroy, FocusableO
     private _resizeDirection: ResizeDirection;
     private _maxColumn: number;
     private _rank: number;
+
     constructor(private readonly _cd: ChangeDetectorRef, private readonly _elementRef: ElementRef) {}
 
-    /** @hidden */
-    ngOnInit(): void {
-        this._resizeDebounce$.pipe(debounceTime(2)).subscribe((positionChange: PositionChange) => {
-            // this.resizing.emit(new ResizingEvent(this, positionChange));
-        });
-    }
-
-    /** @hidden */
-    ngOnDestroy(): void {
-        this._resizeDebounce$.complete();
-    }
+    /**
+     * Emitted when card drop completes
+     * @param event : drop item is ResizableCardItemComponent
+     */
+    drop(event: any): void {}
 
     /**
      * When resize handler is pressed and resizing may start.
@@ -278,18 +262,17 @@ export class ResizableCardItemComponent implements OnInit, OnDestroy, FocusableO
                 this._verticalResizing(clientY);
         }
 
-        const cardColumnNumbers = Math.floor(this.cardWidth / horizontalResizeStep);
-        const cardWidthColumn = cardColumnNumbers * horizontalResizeStep + (cardColumnNumbers - 1) * gap;
+        const cardWidthColSpan = Math.floor(this.cardWidth / horizontalResizeStep);
+        const cardWidthWithColumn = cardWidthColSpan * horizontalResizeStep + (cardWidthColSpan - 1) * gap;
 
-        const horizontalResizeThresholdReached = this.cardWidth - cardWidthColumn > horizontalResizeOffset;
+        const horizontalResizeThresholdReached = this.cardWidth - cardWidthWithColumn > horizontalResizeOffset;
 
         if (clientX > this._prevX) {
             // increasing width
             this.cardState = 1;
 
             if (horizontalResizeThresholdReached) {
-                const cardSpan = Math.floor(this.cardWidth / horizontalResizeStep);
-                const futureCardWidth = (cardSpan + 1) * horizontalResizeStep + cardSpan * gap;
+                const futureCardWidth = (cardWidthColSpan + 1) * horizontalResizeStep + cardWidthColSpan * gap;
                 this.resizeIndicationBorderWidth = futureCardWidth - this.cardWidth;
             } else {
                 this.resizeIndicationBorderWidth = 0;
@@ -298,31 +281,19 @@ export class ResizableCardItemComponent implements OnInit, OnDestroy, FocusableO
             // decreasing width
             this.cardState = -1;
             if (horizontalResizeThresholdReached) {
-                const cardSpan = Math.floor(this.cardWidth / horizontalResizeStep);
-                const futureCardWidth = (cardSpan + 1) * horizontalResizeStep + cardSpan * gap;
+                const futureCardWidth = (cardWidthColSpan + 1) * horizontalResizeStep + cardWidthColSpan * gap;
                 this.resizeIndicationBorderWidth = futureCardWidth - this.cardWidth;
             } else {
                 this.resizeIndicationBorderWidth = 0;
             }
         }
 
-        // Emit resizing event on some interval. improves performance.
-        // this._resizeDebounce$.next(new PositionChange(this._prevX - clientX, this._prevY - clientY));
-        this.resizing.emit(this._getResizedEventObject());
-
-        const heightDiff = Math.abs(this.cardHeight - this._prevCardHeight);
-        const widthDiff = Math.abs(this.cardWidth - this._prevCardWidth);
-
-        // if card dimension change in step. horizontal or vertical.
-        if (
-            (heightDiff > 0 && heightDiff % verticalResizeStep === 0) ||
-            (widthDiff > 0 && widthDiff % horizontalResizeStep === 0)
-        ) {
-            this.stepChange.emit(this._getResizedEventObject());
-        }
-
         this._prevX = clientX;
         this._prevY = clientY;
+        this._cd.detectChanges();
+
+        // Emit resizing event on some interval. improves performance.
+        this.resizing.emit(this.getResizedEventObject());
     }
 
     /**
@@ -340,9 +311,6 @@ export class ResizableCardItemComponent implements OnInit, OnDestroy, FocusableO
             return;
         }
 
-        // if resize offset reached then only resize complete otherwise revert to original state
-        // if (this._resizeOffsetReached()) {
-
         // increase/decrease width of card in order of 20rem
         if (Math.abs(this.cardWidth - this._prevCardWidth) > 0) {
             this._horizontalStepResizing();
@@ -355,7 +323,6 @@ export class ResizableCardItemComponent implements OnInit, OnDestroy, FocusableO
 
         this._stopResizing();
         this._cd.markForCheck();
-        // }
     }
 
     /** Sets focus on the element */
@@ -413,13 +380,33 @@ export class ResizableCardItemComponent implements OnInit, OnDestroy, FocusableO
         return this._elementRef;
     }
 
+    /** Returns ResizedEvent object to emit. */
+    getResizedEventObject(): ResizedEvent {
+        const newCardHeightRowSpan = Math.floor(this.cardHeight / verticalResizeStep);
+        const newCardWidthColSpan = Math.floor(this.cardWidth / horizontalResizeStep);
+        const newCardWidth = newCardWidthColSpan * horizontalResizeStep + (newCardWidthColSpan - 1) * gap;
+
+        const horizontalResizeThresholdReached = this.cardWidth - newCardWidth > horizontalResizeOffset;
+        const newCardColSpan = horizontalResizeThresholdReached ? newCardWidthColSpan + 1 : newCardWidthColSpan;
+        return new ResizedEvent(
+            this,
+            this._prevCardWidth,
+            this._prevCardHeight,
+            this.cardWidth,
+            this.cardHeight,
+            this._cardWidthColSpan,
+            this._cardHeightRowSpan,
+            newCardColSpan,
+            newCardHeightRowSpan
+        );
+    }
+
     /** @hidden Set card properties using config received */
     private _initialSetup(): void {
         this.cardWidthColSpan = this._config?.cardWidthColSpan || this.cardWidthColSpan;
         this.cardHeightRowSpan = this._config?.cardHeightRowSpan || this.cardHeightRowSpan;
         this.title = this._config?.title || this.title;
         this.rank = this._config?.rank || this.rank;
-        this.prevRank = -1;
         this.cardMiniHeaderRowSpan = this._config?.cardMiniHeaderRowSpan || this.cardMiniHeaderRowSpan;
         this.cardMiniContentRowSpan = this._config?.cardMiniContentRowSpan || this.cardMiniContentRowSpan;
         this.resizable = this._config.resizable || this.resizable;
@@ -463,7 +450,6 @@ export class ResizableCardItemComponent implements OnInit, OnDestroy, FocusableO
 
     /**
      * @hidden make horizontal resize only on step of 20rem
-     * raises stepChange event
      */
     private _horizontalStepResizing(): void {
         this._horizontalResizeWithOffset();
@@ -473,13 +459,10 @@ export class ResizableCardItemComponent implements OnInit, OnDestroy, FocusableO
             this.cardWidth = this.cardWidth + (this.cardWidth / horizontalResizeStep - 1) * gap;
         }
         this.cardWidthColSpan = Math.floor(this.cardWidth / horizontalResizeStep);
-
-        this.stepChange.emit(this._getResizedEventObject());
     }
 
     /**
      * @hidden make vertical resize only on step of 1rem
-     * raises stepChange event
      */
     private _verticalStepResizing(): void {
         // positive value indicates that height has increased
@@ -491,8 +474,6 @@ export class ResizableCardItemComponent implements OnInit, OnDestroy, FocusableO
                 : cardHeightSpan * verticalResizeStep;
 
         this.cardHeightRowSpan = Math.floor(this.cardHeight / verticalResizeStep);
-
-        this.stepChange.emit(this._getResizedEventObject());
     }
 
     /**
@@ -526,7 +507,7 @@ export class ResizableCardItemComponent implements OnInit, OnDestroy, FocusableO
                 // increasing height
                 this.cardHeight = this.cardMiniHeaderHeight + this.cardMiniContentHeight;
                 this._stopResizing();
-                this.miniContentReached.emit(this._getResizedEventObject());
+                this.miniContentReached.emit(this.getResizedEventObject());
             }
         } else if (this.cardHeight < this.cardMiniContentHeight + this.cardMiniHeaderHeight) {
             // if card height is between mini-header and mini-content
@@ -536,11 +517,11 @@ export class ResizableCardItemComponent implements OnInit, OnDestroy, FocusableO
                 // miniHeader height reached, stop resizing
                 this.cardHeight = this.cardMiniHeaderHeight;
                 this._stopResizing();
-                this.miniHeaderReached.emit(this._getResizedEventObject());
+                this.miniHeaderReached.emit(this.getResizedEventObject());
             } else {
                 this.cardHeight = this.cardMiniHeaderHeight + this.cardMiniContentHeight;
                 this._stopResizing();
-                this.miniContentReached.emit(this._getResizedEventObject());
+                this.miniContentReached.emit(this.getResizedEventObject());
             }
         } else {
             this.cardHeight = this.cardHeight - (this._prevY - yPosition);
@@ -548,7 +529,7 @@ export class ResizableCardItemComponent implements OnInit, OnDestroy, FocusableO
 
         // stop resizing on miniContent height
         if (this.cardHeight <= this.cardMiniContentHeight + this.cardMiniHeaderHeight) {
-            this.miniContentReached.emit(this._getResizedEventObject());
+            this.miniContentReached.emit(this.getResizedEventObject());
             this._stopResizing();
         }
     }
@@ -558,11 +539,10 @@ export class ResizableCardItemComponent implements OnInit, OnDestroy, FocusableO
         if (this._resize) {
             this.cardState = 0;
             this.resizeIndicationBorderWidth = 0;
-            this.cardState = 0;
             this._resize = false;
             this.zIndex = 0;
             this.showBorder = false;
-            this.resized.emit(this._getResizedEventObject());
+            this.resized.emit(this.getResizedEventObject());
         }
     }
 
@@ -589,19 +569,6 @@ export class ResizableCardItemComponent implements OnInit, OnDestroy, FocusableO
         this.cardMiniContentHeight = this._cardMiniContentRowSpan * verticalResizeStep;
         this._cd.markForCheck();
     }
-
-    /** @hidden Returns ResizedEvent object to emit. */
-    private _getResizedEventObject(): ResizedEvent {
-        return new ResizedEvent(
-            this,
-            this._prevCardWidth,
-            this._prevCardHeight,
-            this.cardWidth,
-            this.cardHeight,
-            this._cardWidthColSpan,
-            this._cardHeightRowSpan
-        );
-    }
 }
 
 /** Config interface for card properties */
@@ -615,16 +582,6 @@ export interface ResizableCardItemConfig {
     resizable?: boolean;
 }
 
-/** Change in card position */
-export class PositionChange {
-    constructor(public width: number, public prevWidth: number, public height: number, public prevHeight: number) {}
-}
-
-/** Object to emit on resizing */
-export class ResizingEvent {
-    constructor(public card: ResizableCardItemComponent, public positionChange: PositionChange) {}
-}
-
 /** Object to emit on resize complete */
 export class ResizedEvent {
     constructor(
@@ -634,7 +591,9 @@ export class ResizedEvent {
         public cardWidth: number,
         public cardHeight: number,
         public cardWidthColSpan: number,
-        public cardHeightRowSpan: number
+        public cardHeightRowSpan: number,
+        public newCardWidthColSpan: number,
+        public newCardHeightRowSpan: number
     ) {}
 }
 

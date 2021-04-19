@@ -1,6 +1,6 @@
 <div class="fd-resizable-card-layout__item" [class.fd-resizable-card-layout__indication-border]="showBorder"
      #resizeCard>
-    <div style="display: flex" [style.width.px]="cardWidth" [style.height.px]="cardHeight" (mouseenter)="showResizeIcon($event)"
+    <div class="card-border-display" [style.width.px]="cardWidth" [style.height.px]="cardHeight" (mouseenter)="showResizeIcon($event)"
         (mouseleave)="hideResizeIcon($event)">
         <div class="fd-resizable-card-layout__card">
             <ng-content></ng-content>
@@ -13,9 +13,10 @@
             </ng-container>
         </div>
 
-        <ng-container *ngTemplateOutlet="verticalHandleTpt"></ng-container>
-  
-        <ng-container *ngTemplateOutlet="horizontalHandleTpt"></ng-container>
+        <ng-container *ngIf="resizable">
+            <ng-container *ngTemplateOutlet="verticalHandleTpt"></ng-container>
+            <ng-container *ngTemplateOutlet="horizontalHandleTpt"></ng-container>
+        </ng-container>
     </div>
     
     <div class="fd-resizable-card-expansion" [style.width.px]="resizeIndicationBorderWidth" [style.height.px]="cardHeight"></div>

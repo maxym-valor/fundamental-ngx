@@ -16,6 +16,7 @@ import {
     ViewEncapsulation
 } from '@angular/core';
 import { FocusKeyManager } from '@angular/cdk/a11y';
+import { DragDrop } from '@angular/cdk/drag-drop';
 import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 
@@ -23,19 +24,16 @@ import {
     CardDropped,
     horizontalResizeStep,
     gap,
-    ResizingEvent,
     ResizedEvent,
     ResizableCardItemComponent,
     ResizableCardItemConfig,
     verticalResizeStep,
-    horizontalResizeOffset,
-    verticalResizeOffset
+    horizontalResizeOffset
 } from './resizable-card-item/resizable-card-item.component';
 
-const DRAG_START_DELAY = 500;
-const AnimationDuration = '750ms';
+export const dragStartDelay = 500;
+const animationDuration = '750ms';
 export type LayoutSize = 'sm' | 'md' | 'lg' | 'xl';
-export type MoveDirection = 1 | -1; // move border card down or up, while resizing
 export type ResizableCardLayoutConfig = Array<ResizableCardItemConfig>;
 
 @Component({
@@ -64,6 +62,10 @@ export class ResizableCardLayoutComponent implements OnInit, AfterViewInit, Afte
         this._layout = layoutSize;
         this._setLayoutColumns(layoutSize);
     }
+
+    /** Drag start delay in milliseconds */
+    @Input()
+    dragStartDelay = dragStartDelay;
 
     /** Emits when card resize is reached to one new step in horizontal or vertical direction */
     @Output()
@@ -103,8 +105,6 @@ export class ResizableCardLayoutComponent implements OnInit, AfterViewInit, Afte
     /** height for layout */
     layoutHeight: number;
 
-    dragStartDelay = DRAG_START_DELAY;
-
     /** @hidden Number of columns in layout. considering 1 column width 20rem */
     private _columns: number;
 
@@ -127,34 +127,37 @@ export class ResizableCardLayoutComponent implements OnInit, AfterViewInit, Afte
     private _destroy$ = new Subject<boolean>();
 
     /** @hidden */
-    private _startAnimation: boolean;
-
-    /** @hidden */
     private _layoutShifted = false;
 
     /** @hidden */
     private _currentResizingCard: ResizableCardItemComponent;
 
-    constructor(private readonly _cd: ChangeDetectorRef, private readonly _elementRef: ElementRef) { }
+    constructor(
+        private readonly _cd: ChangeDetectorRef,
+        private readonly _elementRef: ElementRef,
+        private _dragDropService: DragDrop
+    ) {}
 
     /** @hidden */
     ngOnInit(): void {
         this._columnsHeight = new Array(this._columns);
-        this._initHeightArray();
+        this._columnsHeight.fill(0);
+        // initialise value 0
     }
 
     /** @hidden */
     ngAfterContentInit(): void {
         this._initialSetup();
         // listen for query-list change
-        this.resizeCardItems.changes.subscribe(() => {
-            this.arrangeCards(this.resizeCardItems?.toArray());
-        });
         this.resizeCardItems.forEach((card) => {
             card?.verifyUpdateCardWidth(this.layoutSize);
         });
 
+        this.resizeCardItems.changes.subscribe(() => {
+            this.arrangeCards(this.resizeCardItems?.toArray());
+        });
         this.arrangeCards(this.resizeCardItems?.toArray());
+        this._cd.markForCheck();
     }
 
     /** @hidden */
@@ -185,7 +188,7 @@ export class ResizableCardLayoutComponent implements OnInit, AfterViewInit, Afte
      * Arranges cards in layout based on rank, width and height of card
      */
     arrangeCards(cards: Array<ResizableCardItemComponent>): void {
-        this._initHeightArray();
+        this._columnsHeight.fill(0);
         // sort based on the card rank
         this._sortedCards = cards.sort(this._sortCards);
 
@@ -196,7 +199,7 @@ export class ResizableCardLayoutComponent implements OnInit, AfterViewInit, Afte
         this.layoutHeight = Math.max.apply(null, this._columnsHeight);
 
         this._emitLayoutChange();
-        this._cd.detectChanges();
+        this._cd.markForCheck();
     }
 
     /**
@@ -211,17 +214,122 @@ export class ResizableCardLayoutComponent implements OnInit, AfterViewInit, Afte
     }
 
     /**
+     * Emitted when card drop completes
+     * @param event : drop item is ResizableCardItemComponent
+     */
+    drop(event: any): void {}
+
+    /**
+     * Handles arrangement of cards in layout
+     */
+    cardResizeComplete(event: ResizedEvent): void {
+        this._layoutShifted = false;
+        this._currentResizingCard = null;
+        this.arrangeCards(this.resizeCardItems.toArray());
+        this.resized.emit(event);
+    }
+
+    /** @hidden */
+    elementRef(): ElementRef<ResizableCardLayoutComponent> {
+        return this._elementRef;
+    }
+
+    /** @hidden Subscribe to events from items */
+    private _initialSetup(): void {
+        // listen for resizing event of card item
+        this.resizeCardItems.forEach((resizeCardItem, index) => {
+            resizeCardItem.elementRef().nativeElement.style.transitionDuration = animationDuration;
+            resizeCardItem.elementRef().nativeElement.style.animationTimingFunction = 'ease';
+            if (this.layoutConfig && this.layoutConfig.length >= index + 1) {
+                resizeCardItem.config = this.layoutConfig[index];
+            }
+
+            resizeCardItem.resizing
+                .pipe(takeUntil(this._destroy$))
+                .subscribe((event: ResizedEvent) => this.cardResizing(event));
+
+            // listen for resize complete event of card item
+            resizeCardItem.resized
+                .pipe(takeUntil(this._destroy$))
+                .subscribe((event: ResizedEvent) => this.cardResizeComplete(event));
+
+            // listen for mini-header height event of card item
+            resizeCardItem.miniHeaderReached.pipe(takeUntil(this._destroy$)).subscribe((event: ResizedEvent) => {
+                this.miniHeaderReached.emit(event);
+            });
+
+            // listen for mini-content height event of card item
+            resizeCardItem.miniContentReached.pipe(takeUntil(this._destroy$)).subscribe((event: ResizedEvent) => {
+                this.miniContentReached.emit(event);
+            });
+        });
+    }
+
+    /** @hidden */
+    private _accessibilitySetup(): void {
+        this._keyboardEventsManager = new FocusKeyManager(this.resizeCardItems).withWrap();
+    }
+
+    /** Emit layoutChange event with updated card dimensions */
+    private _emitLayoutChange(): void {
+        const latestCardConfig: ResizableCardLayoutConfig = [];
+        this.resizeCardItems.forEach((card) => {
+            const cardConfig: ResizableCardItemConfig = {};
+            cardConfig.cardWidthColSpan = card.cardWidthColSpan;
+            cardConfig.cardHeightRowSpan = card.cardHeightRowSpan;
+            cardConfig.rank = card.rank;
+            latestCardConfig.push(cardConfig);
+        });
+        this.layoutChange.emit(latestCardConfig);
+    }
+
+    /** @hidden Sets number of column in layout, based on LayoutSize passed */
+    private _setLayoutColumns(layoutSize: LayoutSize): void {
+        let layoutWidthDefault: number;
+
+        switch (layoutSize) {
+            case 'sm':
+                this._columns = 1;
+                this._paddingLeft = 8;
+                layoutWidthDefault = this._columns * horizontalResizeStep + 2 * this._paddingLeft;
+                this.layoutWidth = layoutWidthDefault;
+                break;
+            case 'md':
+                this._columns = 2;
+                this._paddingLeft = 16;
+                layoutWidthDefault = this._columns * horizontalResizeStep + 2 * this._paddingLeft;
+                this.layoutWidth = layoutWidthDefault + gap;
+                break;
+            case 'lg':
+                this._columns = 3;
+                this._paddingLeft = 16;
+                layoutWidthDefault = this._columns * horizontalResizeStep + 2 * this._paddingLeft;
+                this.layoutWidth = layoutWidthDefault + 2 * gap;
+                break;
+            case 'xl':
+                this._columns = 4;
+                this._paddingLeft = 48;
+                layoutWidthDefault = this._columns * horizontalResizeStep + 2 * this._paddingLeft;
+                this.layoutWidth = layoutWidthDefault + 3 * gap;
+                break;
+            default:
+                this._columns = 4;
+                this._paddingLeft = 48;
+                layoutWidthDefault = this._columns * horizontalResizeStep + 2 * this._paddingLeft;
+                this.layoutWidth = layoutWidthDefault + 3 * gap;
+        }
+    }
+
+    /**
      * Method to handle card vertical resize and trigger the layout change
      * @param event: ResizedEvent
      */
     private _handleVerticalResize(event: ResizedEvent): void {
-        console.log('handle vertical resizing');
-        if (event.card.cardHeight - event.prevCardHeight === verticalResizeStep) {
+        const heightDiff = Math.abs(event.card.cardHeight - event.prevCardHeight);
+        if (heightDiff && heightDiff % verticalResizeStep === 0) {
             this.arrangeCards(this._sortedCards);
-            this.resized.emit(event);
-        } else if (Math.abs(event.card.cardHeight - event.prevCardHeight) === verticalResizeStep) {
-            this.arrangeCards(this._sortedCards);
-            this.resized.emit(event);
+            this._cd.markForCheck();
+            this.stepChange.emit(event.card.getResizedEventObject());
         }
     }
 
@@ -233,14 +341,12 @@ export class ResizableCardLayoutComponent implements OnInit, AfterViewInit, Afte
         // when increasing width hit the offset, show extended border and start pushing down border cards
         // when width is decreasing , show extended border till it reaches to offset. then don't. and push border cards up
         const cardWidthChange = event.cardWidth - event.prevCardWidth;
-        const currentResizingItemIndex = this._sortedCards.findIndex((x) => x.rank === event.card.rank);
+        const currentResizingItemIndex = this._sortedCards?.findIndex((x) => x.rank === event.card.rank);
 
         if (event.cardWidth > event.prevCardWidth) {
             // when increasing size
             // card width increasing currently
-            if (
-                event.card.cardState === 1 && cardWidthChange >= horizontalResizeOffset && !this._layoutShifted
-            ) {
+            if (event.card.cardState === 1 && cardWidthChange >= horizontalResizeOffset && !this._layoutShifted) {
                 // index of this card, then get next card. exchange ranks
                 this._sortedCards.forEach((card: ResizableCardItemComponent, index: number) => {
                     if (index > currentResizingItemIndex) {
@@ -258,34 +364,39 @@ export class ResizableCardLayoutComponent implements OnInit, AfterViewInit, Afte
                         }
                     }
                 });
-
                 this.arrangeCards(this._sortedCards);
-                this.resized.emit(event);
+                this.stepChange.emit(event.card.getResizedEventObject());
             } else if (event.card.cardState === -1 && cardWidthChange < horizontalResizeOffset && this._layoutShifted) {
                 // card width decreasing currently
-
                 // move up the cards, if it was shifted while increasing the width
-                this._sortedCards.forEach((card: ResizableCardItemComponent, index: number) => {
+                this._sortedCards.forEach((card: ResizableCardItemComponent) => {
                     card.rank = card.prevRank ? card.prevRank : card.rank;
+                    card.prevRank = 0;
                 });
                 this._layoutShifted = false;
                 this.arrangeCards(this._sortedCards);
-                this.resized.emit(event);
+                this.stepChange.emit(event.card.getResizedEventObject());
             }
         } else if (event.cardWidth < event.prevCardWidth) {
             // when decreasing size
-            if (event.card.cardState === -1 && -cardWidthChange > horizontalResizeOffset + gap && !this._layoutShifted) {
+            if (
+                event.card.cardState === -1 &&
+                -cardWidthChange >= horizontalResizeOffset + gap &&
+                !this._layoutShifted
+            ) {
                 // card width decreasing currently
                 this._layoutShifted = true;
                 this.arrangeCards(this._sortedCards);
-                this.resized.emit(event);
-
-            } else if (event.card.cardState === 1 && -cardWidthChange < horizontalResizeOffset + gap && this._layoutShifted) {
+                this.stepChange.emit(event.card.getResizedEventObject());
+            } else if (
+                event.card.cardState === 1 &&
+                -cardWidthChange <= horizontalResizeOffset + gap &&
+                this._layoutShifted
+            ) {
                 // card width increasing currently
-
                 this._layoutShifted = false;
                 this.arrangeCards(this._sortedCards);
-                this.resized.emit(event);
+                this.stepChange.emit(event.card.getResizedEventObject());
             }
         }
     }
@@ -324,121 +435,6 @@ export class ResizableCardLayoutComponent implements OnInit, AfterViewInit, Afte
         }
     }
 
-    /**
-     * Handles arrangement of cards in layout
-     */
-    cardResizeComplete(event: ResizedEvent): void {
-        this._layoutShifted = false;
-        this._currentResizingCard = null;
-        this.arrangeCards(this.resizeCardItems.toArray());
-        this.resized.emit(event);
-    }
-
-    /** @hidden */
-    elementRef(): ElementRef<ResizableCardLayoutComponent> {
-        return this._elementRef;
-    }
-
-    /** @hidden Subscribe to events from items */
-    private _initialSetup(): void {
-        // listen for resizing event of card item
-        this.resizeCardItems.forEach((resizeCardItem, index) => {
-            resizeCardItem.elementRef().nativeElement.style.transitionDuration = AnimationDuration;
-            resizeCardItem.elementRef().nativeElement.style.animationTimingFunction = 'ease';
-            if (this.layoutConfig && this.layoutConfig.length >= index + 1) {
-                resizeCardItem.config = this.layoutConfig[index];
-            }
-
-            resizeCardItem.resizing
-                .pipe(takeUntil(this._destroy$))
-                .subscribe((event: ResizedEvent) => this.cardResizing(event));
-
-            // listen for resize complete event of card item
-            resizeCardItem.resized
-                .pipe(takeUntil(this._destroy$))
-                .subscribe((event: ResizedEvent) => this.cardResizeComplete(event));
-
-            // listen for mini-header height event of card item
-            resizeCardItem.miniHeaderReached.pipe(takeUntil(this._destroy$)).subscribe((event: ResizedEvent) => {
-                this.miniHeaderReached.emit(event);
-            });
-
-            // listen for mini-content height event of card item
-            resizeCardItem.miniContentReached.pipe(takeUntil(this._destroy$)).subscribe((event: ResizedEvent) => {
-                this.miniContentReached.emit(event);
-            });
-
-            // listen for step-change event of card item
-            resizeCardItem.stepChange.pipe(takeUntil(this._destroy$)).subscribe((event: ResizedEvent) => {
-                this.stepChange.emit(event);
-            });
-        });
-    }
-
-    /** @hidden */
-    private _accessibilitySetup(): void {
-        this._keyboardEventsManager = new FocusKeyManager(this.resizeCardItems).withWrap();
-    }
-
-    /** Emit layoutChange event with updated card dimensions */
-    private _emitLayoutChange(): void {
-        const latestCardConfig: ResizableCardLayoutConfig = [];
-        this.resizeCardItems.forEach((card) => {
-            const cardConfig: ResizableCardItemConfig = {};
-            cardConfig.cardWidthColSpan = card.cardWidthColSpan;
-            cardConfig.cardHeightRowSpan = card.cardHeightRowSpan;
-            cardConfig.rank = card.rank;
-            latestCardConfig.push(cardConfig);
-        });
-        this.layoutChange.emit(latestCardConfig);
-    }
-
-    /** @hidden Sets number of column in layout, based on LayoutSize passed */
-    private _setLayoutColumns(layoutSize: LayoutSize): void {
-        let layoutWidthDefault: number;
-
-        switch (layoutSize) {
-            case 'sm':
-                this._columns = 1;
-                this._paddingLeft = 8;
-
-                layoutWidthDefault = this._columns * horizontalResizeStep + 2 * this._paddingLeft;
-                this.layoutWidth = layoutWidthDefault;
-                break;
-            case 'md':
-                this._columns = 2;
-                this._paddingLeft = 16;
-                layoutWidthDefault = this._columns * horizontalResizeStep + 2 * this._paddingLeft;
-                this.layoutWidth = layoutWidthDefault + gap;
-                break;
-            case 'lg':
-                this._columns = 3;
-                this._paddingLeft = 16;
-                layoutWidthDefault = this._columns * horizontalResizeStep + 2 * this._paddingLeft;
-                this.layoutWidth = layoutWidthDefault + 2 * gap;
-                break;
-            case 'xl':
-                this._columns = 4;
-                this._paddingLeft = 48;
-                layoutWidthDefault = this._columns * horizontalResizeStep + 2 * this._paddingLeft;
-                this.layoutWidth = layoutWidthDefault + 3 * gap;
-                break;
-            default:
-                this._columns = 4;
-                this._paddingLeft = 48;
-                layoutWidthDefault = this._columns * horizontalResizeStep + 2 * this._paddingLeft;
-                this.layoutWidth = layoutWidthDefault + 3 * gap;
-        }
-        this._cd.detectChanges();
-    }
-
-    /** @hidden Initialize height array for columns */
-    private _initHeightArray(): void {
-        for (let index = 0; index < this._columns; index++) {
-            this._columnsHeight[index] = 0;
-        }
-    }
-
     /** @hidden updates array with new column heights */
     private _updateColumnsHeight(card: ResizableCardItemComponent): void {
         const columnsStart = Math.floor(card.left / horizontalResizeStep);
@@ -448,7 +444,8 @@ export class ResizableCardLayoutComponent implements OnInit, AfterViewInit, Afte
 
         // till which columns card spans
         const columnsSpan =
-            card.cardWidth - cardBaseColSpan * horizontalResizeStep - (cardBaseColSpan - 1) * gap >= horizontalResizeOffset
+            card.cardWidth - cardBaseColSpan * horizontalResizeStep - (cardBaseColSpan - 1) * gap >=
+            horizontalResizeOffset
                 ? cardBaseColSpan + 1
                 : cardBaseColSpan;
 
@@ -467,10 +464,6 @@ export class ResizableCardLayoutComponent implements OnInit, AfterViewInit, Afte
      * @hidden Try to set card at available heights
      */
     private _setCardPositionValues(card: ResizableCardItemComponent, index: number): void {
-        if (this._currentResizingCard?.title === card.title) {
-            card.cardWidth = this._currentResizingCard.cardWidth;
-        }
-
         if (index === 0) {
             card.left = 0 + this._paddingLeft;
             card.top = 0;
@@ -480,12 +473,9 @@ export class ResizableCardLayoutComponent implements OnInit, AfterViewInit, Afte
 
         const uniqueHeights = this._getSortedUniqueHeights();
         let cardPositioned = false;
-        for (const height of uniqueHeights) {
-            if (!cardPositioned) {
-                cardPositioned = this._isPositionSetSuccess(height, card);
-            } else {
-                break;
-            }
+
+        for (let i = 0; i < uniqueHeights.length && !cardPositioned; i++) {
+            cardPositioned = this._isPositionSetSuccess(uniqueHeights[i], card);
         }
     }
 
@@ -501,14 +491,12 @@ export class ResizableCardLayoutComponent implements OnInit, AfterViewInit, Afte
                 columnPositions.push(index);
             }
         }
-
         // check for each card position, starting from leftmost
         let isFitting = false;
         let startingColumnPosition = -1;
 
         // try to fit as left as possible from the column position
         startingColumnPosition = this._fitCardColumnPosition(card, columnPositions, height);
-
         if (startingColumnPosition !== -1) {
             isFitting = true;
             card.left =
@@ -522,7 +510,11 @@ export class ResizableCardLayoutComponent implements OnInit, AfterViewInit, Afte
     }
 
     /** @hidden Try to start card position from left most fit position */
-    private _fitCardColumnPosition(card: ResizableCardItemComponent, columnPositions: Array<number>, height: number): number {
+    private _fitCardColumnPosition(
+        card: ResizableCardItemComponent,
+        columnPositions: Array<number>,
+        height: number
+    ): number {
         // check for each card position, starting from leftmost
         let isFitting = false;
         let startingColumnPosition = -1;
@@ -530,10 +522,9 @@ export class ResizableCardLayoutComponent implements OnInit, AfterViewInit, Afte
         // start from previous indexes
         const cardBaseColSpan = Math.floor(card.cardWidth / horizontalResizeStep);
         const cardColSpan =
-            card.cardWidth - cardBaseColSpan * horizontalResizeStep >= horizontalResizeOffset
+            card.cardWidth - cardBaseColSpan * horizontalResizeStep - cardBaseColSpan * gap >= horizontalResizeOffset
                 ? cardBaseColSpan + 1
                 : cardBaseColSpan;
-        // const cardColSpan = Math.floor((card.cardWidth + card.resizeIndicationBorderWidth) / horizontalResizeStep);
 
         // try to set towards left from available card position
         // eg. [1, 2, 3, 4] columnsPositions
@@ -543,12 +534,13 @@ export class ResizableCardLayoutComponent implements OnInit, AfterViewInit, Afte
             }
 
             // startingPosition values will be 1, 2, 3, 4
+            // try to fit as left as possible
             let startingPosition = columnPosition - (cardColSpan - 1);
             startingPosition = startingPosition > 0 ? startingPosition : 1;
 
             for (let index = startingPosition; index <= columnPosition && !isFitting; index++) {
                 for (let span = 0; span < cardColSpan; span++) {
-                    if (this._columnsHeight[index + span - 1] <= height) {
+                    if (this._columnsHeight[index + span - 1] <= height && cardColSpan + index - 1 <= this._columns) {
                         isFitting = true;
                         startingColumnPosition = index - 1;
                     } else {

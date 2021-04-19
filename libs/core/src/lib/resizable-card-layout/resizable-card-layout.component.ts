@@ -206,11 +206,34 @@ export class ResizableCardLayoutComponent implements OnInit, AfterViewInit, Afte
     cardResizing(event: ResizedEvent): void {
         this.resizing.emit(event);
         this._currentResizingCard = event.card;
-        const currentResizingItemIndex = this._sortedCards.findIndex((x) => x.rank === event.card.rank);
+        this._handleHorizontalResize(event);
+        this._handleVerticalResize(event);
+    }
 
+    /**
+     * Method to handle card vertical resize and trigger the layout change
+     * @param event: ResizedEvent
+     */
+    private _handleVerticalResize(event: ResizedEvent): void {
+        console.log('handle vertical resizing');
+        if (event.card.cardHeight - event.prevCardHeight === verticalResizeStep) {
+            this.arrangeCards(this._sortedCards);
+            this.resized.emit(event);
+        } else if (Math.abs(event.card.cardHeight - event.prevCardHeight) === verticalResizeStep) {
+            this.arrangeCards(this._sortedCards);
+            this.resized.emit(event);
+        }
+    }
+
+    /**
+     * Method to handle card horizontal resize and trigger the layout change
+     * @param event : ResizedEvent
+     */
+    private _handleHorizontalResize(event: ResizedEvent): void {
         // when increasing width hit the offset, show extended border and start pushing down border cards
         // when width is decreasing , show extended border till it reaches to offset. then don't. and push border cards up
         const cardWidthChange = event.cardWidth - event.prevCardWidth;
+        const currentResizingItemIndex = this._sortedCards.findIndex((x) => x.rank === event.card.rank);
 
         if (event.cardWidth > event.prevCardWidth) {
             // when increasing size
@@ -252,12 +275,13 @@ export class ResizableCardLayoutComponent implements OnInit, AfterViewInit, Afte
         } else if (event.cardWidth < event.prevCardWidth) {
             // when decreasing size
             if (event.card.cardState === -1 && -cardWidthChange > horizontalResizeOffset + gap && !this._layoutShifted) {
+                // card width decreasing currently
                 this._layoutShifted = true;
                 this.arrangeCards(this._sortedCards);
                 this.resized.emit(event);
 
             } else if (event.card.cardState === 1 && -cardWidthChange < horizontalResizeOffset + gap && this._layoutShifted) {
-                // card width decreasing currently
+                // card width increasing currently
 
                 this._layoutShifted = false;
                 this.arrangeCards(this._sortedCards);

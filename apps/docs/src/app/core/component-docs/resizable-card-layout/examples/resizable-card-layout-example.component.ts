@@ -12,23 +12,27 @@ export class ResizableCardLayoutExampleComponent implements OnInit {
 
     miniHeaderRowSpan = 4;
     miniContentRowSpan = 4;
-    card1Data: number[];
-    card2Data: number[] = [];
-    card3TableData: any[] = [];
-    card3TableColumns: string[] = [];
+
+    initialRows = 3;
 
     listData: number[];
-    initialRows = 5;
 
-    currentTableData: any[] = [];
+    card1Data: number[];
+    card2Data: number[];
+    card4Data: number[];
+    card5Data: number[];
+    card6Data: number[];
+    card7Data: number[];
 
+    card3TableData: any[] = [];
+    card3TableColumns: string[] = [];
     tableColumns: string[] = [];
     tableData: any[] = [];
 
     constructor(private _dialogService: DialogService) {}
 
     ngOnInit(): void {
-        this.listData = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14];
+        this.listData = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 16, 17];
         this.tableColumns = ['name', 'type', 'region', 'rate', 'quantity', 'tax', 'totalWeight', 'totalAmount'];
 
         this.tableData = [
@@ -114,7 +118,11 @@ export class ResizableCardLayoutExampleComponent implements OnInit {
             }
         ];
 
-        this.card1Data = this.listData.slice(0, this.initialRows);
+        this.card1Data = this.listData.slice(0, this.initialRows + 2);
+        this.card4Data = this.listData.slice(0, this.initialRows);
+        this.card5Data = this.listData.slice(0, this.initialRows);
+        this.card6Data = this.listData.slice(0, this.initialRows);
+        this.card7Data = this.listData.slice(0, this.initialRows);
         this.card3TableColumns = this.tableColumns.slice(0, 4);
         this.card3TableData = this.tableData.slice(0, this.initialRows);
     }
@@ -219,13 +227,53 @@ export class ResizableCardLayoutExampleComponent implements OnInit {
         }
     }
 
-    private _handleCard4Data(event: ResizedEvent): void {}
+    private _handleCard4Data(event: ResizedEvent): void {
+        if (event.newCardHeightRowSpan === this.miniHeaderRowSpan) {
+            this.card4Data = [];
+        } else if (event.newCardHeightRowSpan === this.miniHeaderRowSpan + this.miniContentRowSpan) {
+            this.card4Data = this._getListData(1);
+        } else {
+            const index =
+                1 + Math.floor((event.newCardHeightRowSpan - (this.miniHeaderRowSpan + this.miniContentRowSpan)) / 3);
+            this.card4Data = this._getListData(index);
+        }
+    }
 
-    private _handleCard5Data(event: ResizedEvent): void {}
+    private _handleCard5Data(event: ResizedEvent): void {
+        if (event.newCardHeightRowSpan === this.miniHeaderRowSpan) {
+            this.card5Data = [];
+        } else if (event.newCardHeightRowSpan === this.miniHeaderRowSpan + this.miniContentRowSpan) {
+            this.card5Data = this._getListData(1);
+        } else {
+            const index =
+                1 + Math.floor((event.newCardHeightRowSpan - (this.miniHeaderRowSpan + this.miniContentRowSpan)) / 3);
+            this.card5Data = this._getListData(index);
+        }
+    }
 
-    private _handleCard6Data(event: ResizedEvent): void {}
+    private _handleCard6Data(event: ResizedEvent): void {
+        if (event.newCardHeightRowSpan === this.miniHeaderRowSpan) {
+            this.card6Data = [];
+        } else if (event.newCardHeightRowSpan === this.miniHeaderRowSpan + this.miniContentRowSpan) {
+            this.card6Data = this._getListData(1);
+        } else {
+            const index =
+                1 + Math.floor((event.newCardHeightRowSpan - (this.miniHeaderRowSpan + this.miniContentRowSpan)) / 3);
+            this.card6Data = this._getListData(index);
+        }
+    }
 
-    private _handleCard7Data(event: ResizedEvent): void {}
+    private _handleCard7Data(event: ResizedEvent): void {
+        if (event.newCardHeightRowSpan === this.miniHeaderRowSpan) {
+            this.card7Data = [];
+        } else if (event.newCardHeightRowSpan === this.miniHeaderRowSpan + this.miniContentRowSpan) {
+            this.card7Data = this._getListData(1);
+        } else {
+            const index =
+                1 + Math.floor((event.newCardHeightRowSpan - (this.miniHeaderRowSpan + this.miniContentRowSpan)) / 3);
+            this.card7Data = this._getListData(index);
+        }
+    }
 
     private _getListData(index: number): Array<number> {
         return this.listData.slice(0, index);

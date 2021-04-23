@@ -200,12 +200,6 @@ export class ResizableCardItemComponent implements FocusableOption {
     constructor(private readonly _cd: ChangeDetectorRef, private readonly _elementRef: ElementRef) {}
 
     /**
-     * Emitted when card drop completes
-     * @param event : drop item is ResizableCardItemComponent
-     */
-    drop(event: any): void {}
-
-    /**
      * When resize handler is pressed and resizing may start.
      * @param event: MouseEvent
      * @param resizeDirection: which handler is pressed to resize

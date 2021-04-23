@@ -14,9 +14,7 @@
 
         <fd-dialog-body class="fd-docs-cursor">
             <div class="fd-docs-center-align">
-                <fd-resizable-card-layout [layoutSize]="layoutSize" (stepChange)="onStepChange($event)"
-                    (miniHeaderReached)="onMiniHeaderReached($event)"
-                    (miniContentReached)="onMiniContentReached($event)">
+                <fd-resizable-card-layout [layoutSize]="layoutSize" (stepChange)="onStepChange($event)">
                     <fd-resizable-card-item title="card1" [rank]="1" [cardWidthColSpan]="1" [cardHeightRowSpan]="20"
                         [cardMiniHeaderRowSpan]="miniHeaderRowSpan" [cardMiniContentRowSpan]="miniContentRowSpan">
                         <fd-card>

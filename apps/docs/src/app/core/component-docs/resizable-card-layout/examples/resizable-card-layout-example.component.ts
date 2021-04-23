@@ -138,14 +138,6 @@ export class ResizableCardLayoutExampleComponent implements OnInit {
         this._showData(event);
     }
 
-    onMiniHeaderReached(event: ResizedEvent): void {
-        this._showData(event);
-    }
-
-    onMiniContentReached(event: ResizedEvent): void {
-        this._showData(event);
-    }
-
     /** Decides how much data is shown on card */
     private _showData(event: ResizedEvent): void {
         switch (event.card.title) {

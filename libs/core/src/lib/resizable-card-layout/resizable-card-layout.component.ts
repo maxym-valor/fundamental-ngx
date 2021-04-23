@@ -16,7 +16,6 @@ import {
     ViewEncapsulation
 } from '@angular/core';
 import { FocusKeyManager } from '@angular/cdk/a11y';
-import { DragDrop } from '@angular/cdk/drag-drop';
 import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 
@@ -31,8 +30,8 @@ import {
     horizontalResizeOffset
 } from './resizable-card-item/resizable-card-item.component';
 
-export const dragStartDelay = 500;
 const animationDuration = '750ms';
+const animationTimingFunction = 'ease';
 export type LayoutSize = 'sm' | 'md' | 'lg' | 'xl';
 export type ResizableCardLayoutConfig = Array<ResizableCardItemConfig>;
 
@@ -62,10 +61,6 @@ export class ResizableCardLayoutComponent implements OnInit, AfterViewInit, Afte
         this._layout = layoutSize;
         this._setLayoutColumns(layoutSize);
     }
-
-    /** Drag start delay in milliseconds */
-    @Input()
-    dragStartDelay = dragStartDelay;
 
     /** Emits when card resize is reached to one new step in horizontal or vertical direction */
     @Output()
@@ -132,11 +127,7 @@ export class ResizableCardLayoutComponent implements OnInit, AfterViewInit, Afte
     /** @hidden */
     private _currentResizingCard: ResizableCardItemComponent;
 
-    constructor(
-        private readonly _cd: ChangeDetectorRef,
-        private readonly _elementRef: ElementRef,
-        private _dragDropService: DragDrop
-    ) {}
+    constructor(private readonly _cd: ChangeDetectorRef, private readonly _elementRef: ElementRef) {}
 
     /** @hidden */
     ngOnInit(): void {
@@ -239,7 +230,7 @@ export class ResizableCardLayoutComponent implements OnInit, AfterViewInit, Afte
         // listen for resizing event of card item
         this.resizeCardItems.forEach((resizeCardItem, index) => {
             resizeCardItem.elementRef().nativeElement.style.transitionDuration = animationDuration;
-            resizeCardItem.elementRef().nativeElement.style.animationTimingFunction = 'ease';
+            resizeCardItem.elementRef().nativeElement.style.animationTimingFunction = animationTimingFunction;
             if (this.layoutConfig && this.layoutConfig.length >= index + 1) {
                 resizeCardItem.config = this.layoutConfig[index];
             }
@@ -278,6 +269,10 @@ export class ResizableCardLayoutComponent implements OnInit, AfterViewInit, Afte
             cardConfig.cardWidthColSpan = card.cardWidthColSpan;
             cardConfig.cardHeightRowSpan = card.cardHeightRowSpan;
             cardConfig.rank = card.rank;
+            cardConfig.title = card.title;
+            cardConfig.cardMiniContentRowSpan = card.cardMiniContentRowSpan;
+            cardConfig.cardMiniHeaderRowSpan = card.cardMiniHeaderRowSpan;
+            cardConfig.resizable = card.resizable;
             latestCardConfig.push(cardConfig);
         });
         this.layoutChange.emit(latestCardConfig);

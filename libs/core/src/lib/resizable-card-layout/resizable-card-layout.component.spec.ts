@@ -204,21 +204,21 @@ describe('ResizableCardLayoutComponent', () => {
 
         fixture.detectChanges();
 
-        expect(card.cardWidthColSpan).toEqual(3);
+        expect(card.cardWidthColSpan).toEqual(2);
         expect(card.cardHeightRowSpan).toEqual(19);
 
         const cards = component.cards.toArray();
         expect(cards[0].left).toEqual(16);
         expect(cards[0].top).toEqual(0);
 
-        expect(cards[1].left).toEqual(16);
-        expect(cards[1].top).toEqual(416);
+        expect(cards[1].left).toEqual(352);
+        expect(cards[1].top).toEqual(0);
 
         expect(cards[2].left).toEqual(16);
-        expect(cards[2].top).toEqual(736);
+        expect(cards[2].top).toEqual(560);
 
-        expect(cards[3].left).toEqual(688);
-        expect(cards[3].top).toEqual(736);
+        expect(cards[3].left).toEqual(352);
+        expect(cards[3].top).toEqual(320);
 
         // decrease width
 
@@ -232,21 +232,21 @@ describe('ResizableCardLayoutComponent', () => {
         card2.onMouseUp(mouseEvent4);
 
         fixture.detectChanges();
-        expect(card.cardWidthColSpan).toEqual(3);
+        expect(card.cardWidthColSpan).toEqual(2);
         expect(card.cardHeightRowSpan).toEqual(19);
 
         // layout should also change
         expect(cards[0].left).toEqual(16);
         expect(cards[0].top).toEqual(0);
 
-        expect(cards[1].left).toEqual(16);
-        expect(cards[1].top).toEqual(416);
+        expect(cards[1].left).toEqual(352);
+        expect(cards[1].top).toEqual(0);
 
         expect(cards[2].left).toEqual(16);
-        expect(cards[2].top).toEqual(736);
+        expect(cards[2].top).toEqual(560);
 
-        expect(cards[3].left).toEqual(688);
-        expect(cards[3].top).toEqual(736);
+        expect(cards[3].left).toEqual(352);
+        expect(cards[3].top).toEqual(320);
 
     });
 
@@ -291,21 +291,21 @@ describe('ResizableCardLayoutComponent', () => {
 
         fixture.detectChanges();
 
-        expect(card.cardWidthColSpan).toEqual(3);
+        expect(card.cardWidthColSpan).toEqual(2);
         expect(card.cardHeightRowSpan).toEqual(23);
 
         const cards = component.cards.toArray();
         expect(cards[0].left).toEqual(16);
         expect(cards[0].top).toEqual(0);
 
-        expect(cards[1].left).toEqual(16);
-        expect(cards[1].top).toEqual(416);
+        expect(cards[1].left).toEqual(352);
+        expect(cards[1].top).toEqual(0);
 
         expect(cards[2].left).toEqual(16);
-        expect(cards[2].top).toEqual(800);
+        expect(cards[2].top).toEqual(624);
 
-        expect(cards[3].left).toEqual(688);
-        expect(cards[3].top).toEqual(800);
+        expect(cards[3].left).toEqual(352);
+        expect(cards[3].top).toEqual(384);
     });
 
     it('should not increase width of card more than the layout width capacity', () => {
@@ -319,21 +319,21 @@ describe('ResizableCardLayoutComponent', () => {
 
         fixture.detectChanges();
 
-        expect(card.cardWidthColSpan).toEqual(3);
+        expect(card.cardWidthColSpan).toEqual(2);
         expect(card.cardHeightRowSpan).toEqual(23);
 
         const cards = component.cards.toArray();
         expect(cards[0].left).toEqual(16);
         expect(cards[0].top).toEqual(0);
 
-        expect(cards[1].left).toEqual(16);
-        expect(cards[1].top).toEqual(416);
+        expect(cards[1].left).toEqual(352);
+        expect(cards[1].top).toEqual(0);
 
         expect(cards[2].left).toEqual(16);
-        expect(cards[2].top).toEqual(800);
+        expect(cards[2].top).toEqual(624);
 
-        expect(cards[3].left).toEqual(688);
-        expect(cards[3].top).toEqual(800);
+        expect(cards[3].left).toEqual(352);
+        expect(cards[3].top).toEqual(384);
 
 
         // increase width of card 2 again

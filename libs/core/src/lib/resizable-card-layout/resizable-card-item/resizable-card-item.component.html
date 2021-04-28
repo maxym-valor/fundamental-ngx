@@ -1,6 +1,6 @@
 <div class="fd-resizable-card-layout__item" [class.fd-resizable-card-layout__indication-border]="showBorder"
      #resizeCard>
-    <div class="card-border-display" [style.width.px]="cardWidth" [style.height.px]="cardHeight" (mouseenter)="showResizeIcon($event)"
+    <div class="fd-resizable-card-border-display" [style.width.px]="cardWidth" [style.height.px]="cardHeight" (mouseenter)="showResizeIcon($event)"
         (mouseleave)="hideResizeIcon($event)">
         <div class="fd-resizable-card-layout__card">
             <ng-content></ng-content>

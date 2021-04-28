@@ -257,7 +257,7 @@ export class ResizableCardItemComponent implements FocusableOption {
         }
 
         const cardWidthColSpan = Math.floor(this.cardWidth / horizontalResizeStep);
-        const cardWidthWithColumn = cardWidthColSpan * horizontalResizeStep + (cardWidthColSpan - 1) * gap;
+        const cardWidthWithColumn = cardWidthColSpan * horizontalResizeStep + cardWidthColSpan * gap;
 
         const horizontalResizeThresholdReached = this.cardWidth - cardWidthWithColumn > horizontalResizeOffset;
 
@@ -378,7 +378,7 @@ export class ResizableCardItemComponent implements FocusableOption {
     getResizedEventObject(): ResizedEvent {
         const newCardHeightRowSpan = Math.floor(this.cardHeight / verticalResizeStep);
         const newCardWidthColSpan = Math.floor(this.cardWidth / horizontalResizeStep);
-        const newCardWidth = newCardWidthColSpan * horizontalResizeStep + (newCardWidthColSpan - 1) * gap;
+        const newCardWidth = newCardWidthColSpan * horizontalResizeStep + newCardWidthColSpan * gap;
 
         const horizontalResizeThresholdReached = this.cardWidth - newCardWidth > horizontalResizeOffset;
         const newCardColSpan = horizontalResizeThresholdReached ? newCardWidthColSpan + 1 : newCardWidthColSpan;
@@ -415,7 +415,7 @@ export class ResizableCardItemComponent implements FocusableOption {
 
         // when width increases
         if (widthIncrement > 0) {
-            if (widthIncrement < horizontalResizeOffset) {
+            if (widthIncrement < horizontalResizeOffset + gap) {
                 // widthIncrement is less than offset, do not increase width
                 this.cardWidth = this._prevCardWidth;
             } else {
@@ -434,7 +434,7 @@ export class ResizableCardItemComponent implements FocusableOption {
             } else {
                 // check value of cardSpanFraction, including gaps in cards
                 let isCardSpanFractionCrossingOffset = false;
-                isCardSpanFractionCrossingOffset = cardSpanFraction + horizontalResizeOffset > horizontalResizeStep;
+                isCardSpanFractionCrossingOffset = cardSpanFraction - cardSpan * gap > horizontalResizeOffset;
                 this.cardWidth = isCardSpanFractionCrossingOffset
                     ? (cardSpan + 1) * horizontalResizeStep
                     : cardSpan * horizontalResizeStep;

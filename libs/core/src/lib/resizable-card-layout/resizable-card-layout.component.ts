@@ -20,7 +20,6 @@ import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 
 import {
-    CardDropped,
     horizontalResizeStep,
     gap,
     ResizedEvent,
@@ -43,10 +42,6 @@ export type ResizableCardLayoutConfig = Array<ResizableCardItemConfig>;
     encapsulation: ViewEncapsulation.None
 })
 export class ResizableCardLayoutComponent implements OnInit, AfterViewInit, AfterContentInit, OnDestroy {
-    /** Drag of card can be disabled. Default is true */
-    @Input()
-    draggable = true;
-
     /** Object for setting each card property */
     @Input()
     layoutConfig: ResizableCardLayoutConfig;
@@ -65,10 +60,6 @@ export class ResizableCardLayoutComponent implements OnInit, AfterViewInit, Afte
     /** Emits when card resize is reached to one new step in horizontal or vertical direction */
     @Output()
     stepChange: EventEmitter<ResizedEvent> = new EventEmitter<ResizedEvent>();
-
-    /** Emits when card is dragged and dropped at different position in layout */
-    @Output()
-    dropped: EventEmitter<CardDropped> = new EventEmitter<CardDropped>();
 
     /** Emits when card is still resizing */
     @Output()
@@ -203,12 +194,6 @@ export class ResizableCardLayoutComponent implements OnInit, AfterViewInit, Afte
         this._handleHorizontalResize(event);
         this._handleVerticalResize(event);
     }
-
-    /**
-     * Emitted when card drop completes
-     * @param event : drop item is ResizableCardItemComponent
-     */
-    drop(event: any): void {}
 
     /**
      * Handles arrangement of cards in layout

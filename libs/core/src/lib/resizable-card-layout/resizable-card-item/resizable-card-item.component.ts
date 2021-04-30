@@ -137,10 +137,6 @@ export class ResizableCardItemComponent implements FocusableOption {
     @Output()
     resized: EventEmitter<ResizedEvent> = new EventEmitter<ResizedEvent>();
 
-    /** Emits when card is dragged and dropped at different position in layout */
-    @Output()
-    dropped: EventEmitter<CardDropped> = new EventEmitter<CardDropped>();
-
     /** Emits when card height is reduced to show only header */
     @Output()
     miniHeaderReached: EventEmitter<ResizedEvent> = new EventEmitter<ResizedEvent>();
@@ -286,7 +282,7 @@ export class ResizableCardItemComponent implements FocusableOption {
         this._prevY = clientY;
         this._cd.detectChanges();
 
-        // Emit resizing event on some interval. improves performance.
+        // Emits resizing event.
         this.resizing.emit(this.getResizedEventObject());
     }
 
@@ -588,14 +584,5 @@ export class ResizedEvent {
         public cardHeightRowSpan: number,
         public newCardWidthColSpan: number,
         public newCardHeightRowSpan: number
-    ) {}
-}
-
-/** Object to emit on card dragged and dropped */
-export class CardDropped {
-    constructor(
-        public previousIndex: number,
-        public currentIndex: number,
-        public items: ResizableCardItemComponent[]
     ) {}
 }

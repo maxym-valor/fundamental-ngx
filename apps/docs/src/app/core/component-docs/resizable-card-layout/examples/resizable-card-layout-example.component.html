@@ -14,7 +14,8 @@
 
         <fd-dialog-body class="fd-docs-cursor">
             <div class="fd-docs-center-align">
-                <fd-resizable-card-layout [layoutSize]="layoutSize" (stepChange)="onStepChange($event)">
+                <fd-resizable-card-layout [layoutSize]="layoutSize" (stepChange)="onStepChange($event)"
+                    (miniHeaderReached)="onMiniHeaderHeight($event)">
                     <fd-resizable-card-item title="card1" [rank]="1" [cardWidthColSpan]="1" [cardHeightRowSpan]="20"
                         [cardMiniHeaderRowSpan]="miniHeaderRowSpan" [cardMiniContentRowSpan]="miniContentRowSpan">
                         <fd-card>
@@ -59,7 +60,7 @@
                     </fd-resizable-card-item>
 
                     <fd-resizable-card-item title="card3" [rank]="3" [cardWidthColSpan]="2" [cardHeightRowSpan]="20"
-                        [cardMiniHeaderRowSpan]="miniHeaderRowSpan" [cardMiniContentRowSpan]="miniContentRowSpan">
+                        [cardMiniHeaderRowSpan]="card3MiniHeaderRowSpan" [cardMiniContentRowSpan]="miniContentRowSpan">
                         <fd-card>
                             <fd-card-header>
                                 <h2 fd-card-title>Card Title 3</h2>
@@ -68,11 +69,13 @@
                             <fd-card-content>
                                 <table fd-table>
                                     <thead fd-table-header>
-                                        <tr fd-table-row>
-                                            <ng-container *ngFor="let column of card3TableColumns">
-                                                <th fd-table-cell>{{ column }}</th>
-                                            </ng-container>
-                                        </tr>
+                                        <ng-container *ngIf="showTableHeader">
+                                            <tr fd-table-row>
+                                                <ng-container *ngFor="let column of card3TableColumns">
+                                                    <th fd-table-cell>{{ column }}</th>
+                                                </ng-container>
+                                            </tr>
+                                        </ng-container>
                                     </thead>
                                     <tbody fd-table-body>
                                         <tr *ngFor="let row of card3TableData" fd-table-row>

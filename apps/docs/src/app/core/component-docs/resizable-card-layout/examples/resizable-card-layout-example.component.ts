@@ -11,6 +11,7 @@ export class ResizableCardLayoutExampleComponent implements OnInit {
     layoutSize: LayoutSize;
 
     miniHeaderRowSpan = 4;
+    card3MiniHeaderRowSpan = 5;
     miniContentRowSpan = 4;
 
     initialRows = 3;
@@ -28,6 +29,7 @@ export class ResizableCardLayoutExampleComponent implements OnInit {
     card3TableColumns: string[] = [];
     tableColumns: string[] = [];
     tableData: any[] = [];
+    showTableHeader = true;
 
     constructor(private _dialogService: DialogService) {}
 
@@ -138,6 +140,17 @@ export class ResizableCardLayoutExampleComponent implements OnInit {
         this._showData(event);
     }
 
+    onMiniHeaderHeight(event: ResizedEvent): void {
+        switch (event.card.title) {
+            case 'card3':
+                this.showTableHeader = false;
+                this.card3TableData = [];
+                break;
+            default:
+                this.showTableHeader = true;
+        }
+    }
+
     /** Decides how much data is shown on card */
     private _showData(event: ResizedEvent): void {
         switch (event.card.title) {
@@ -177,8 +190,7 @@ export class ResizableCardLayoutExampleComponent implements OnInit {
         } else if (event.newCardHeightRowSpan === this.miniHeaderRowSpan + this.miniContentRowSpan) {
             this.card1Data = this._getListData(1);
         } else {
-            const index =
-                1 + Math.floor((event.newCardHeightRowSpan - (this.miniHeaderRowSpan + this.miniContentRowSpan)) / 3);
+            const index = (event.newCardHeightRowSpan - this.miniHeaderRowSpan) / 3;
             this.card1Data = this._getListData(index);
         }
     }
@@ -206,15 +218,13 @@ export class ResizableCardLayoutExampleComponent implements OnInit {
 
         // row data
         switch (event.newCardHeightRowSpan) {
-            case this.miniHeaderRowSpan:
-                this.card3TableData = this._getTableData(0);
-                break;
-            case this.miniHeaderRowSpan + this.miniContentRowSpan:
+            case this.card3MiniHeaderRowSpan + this.miniContentRowSpan:
+                this.showTableHeader = true;
                 this.card3TableData = this._getTableData(1);
                 break;
             default:
-                const difference = event.newCardHeightRowSpan - (this.miniHeaderRowSpan + this.miniContentRowSpan);
-                const index = 1 + Math.floor(difference / 3);
+                // 3 for table header
+                const index = (event.newCardHeightRowSpan - this.miniHeaderRowSpan - 3) / 3;
                 this.card3TableData = this._getTableData(index);
         }
     }
@@ -225,8 +235,7 @@ export class ResizableCardLayoutExampleComponent implements OnInit {
         } else if (event.newCardHeightRowSpan === this.miniHeaderRowSpan + this.miniContentRowSpan) {
             this.card4Data = this._getListData(1);
         } else {
-            const index =
-                1 + Math.floor((event.newCardHeightRowSpan - (this.miniHeaderRowSpan + this.miniContentRowSpan)) / 3);
+            const index = (event.newCardHeightRowSpan - this.miniHeaderRowSpan) / 3;
             this.card4Data = this._getListData(index);
         }
     }
@@ -237,8 +246,7 @@ export class ResizableCardLayoutExampleComponent implements OnInit {
         } else if (event.newCardHeightRowSpan === this.miniHeaderRowSpan + this.miniContentRowSpan) {
             this.card5Data = this._getListData(1);
         } else {
-            const index =
-                1 + Math.floor((event.newCardHeightRowSpan - (this.miniHeaderRowSpan + this.miniContentRowSpan)) / 3);
+            const index = (event.newCardHeightRowSpan - this.miniHeaderRowSpan) / 3;
             this.card5Data = this._getListData(index);
         }
     }
@@ -249,8 +257,7 @@ export class ResizableCardLayoutExampleComponent implements OnInit {
         } else if (event.newCardHeightRowSpan === this.miniHeaderRowSpan + this.miniContentRowSpan) {
             this.card6Data = this._getListData(1);
         } else {
-            const index =
-                1 + Math.floor((event.newCardHeightRowSpan - (this.miniHeaderRowSpan + this.miniContentRowSpan)) / 3);
+            const index = (event.newCardHeightRowSpan - this.miniHeaderRowSpan) / 3;
             this.card6Data = this._getListData(index);
         }
     }
@@ -261,8 +268,7 @@ export class ResizableCardLayoutExampleComponent implements OnInit {
         } else if (event.newCardHeightRowSpan === this.miniHeaderRowSpan + this.miniContentRowSpan) {
             this.card7Data = this._getListData(1);
         } else {
-            const index =
-                1 + Math.floor((event.newCardHeightRowSpan - (this.miniHeaderRowSpan + this.miniContentRowSpan)) / 3);
+            const index = (event.newCardHeightRowSpan - this.miniHeaderRowSpan) / 3;
             this.card7Data = this._getListData(index);
         }
     }

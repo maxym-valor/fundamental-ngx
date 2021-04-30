@@ -8,6 +8,7 @@ import { API_FILES } from '../../api-files';
 import {
     ResizableCardLayoutModule,
     CardModule,
+    InfoLabelModule,
     ListModule,
     TableModule,
     DialogModule,
@@ -38,6 +39,7 @@ const routes: Routes = [
         ResizableCardLayoutModule,
         DialogModule,
         CardModule,
+        InfoLabelModule,
         ListModule,
         SegmentedButtonModule,
         TableModule

@@ -26,6 +26,7 @@ import {
     ResizableCardItemComponent,
     ResizableCardItemConfig,
     verticalResizeStep,
+    verticalResizeOffset,
     horizontalResizeOffset
 } from './resizable-card-item/resizable-card-item.component';
 
@@ -306,7 +307,7 @@ export class ResizableCardLayoutComponent implements OnInit, AfterViewInit, Afte
      */
     private _handleVerticalResize(event: ResizedEvent): void {
         const heightDiff = Math.abs(event.card.cardHeight - event.prevCardHeight);
-        if (heightDiff && heightDiff % verticalResizeStep === 0) {
+        if (heightDiff && heightDiff % verticalResizeStep >= verticalResizeOffset) {
             this.arrangeCards(this._sortedCards);
             this._cd.markForCheck();
             this.stepChange.emit(event.card.getResizedEventObject());

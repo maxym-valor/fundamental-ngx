@@ -6,7 +6,7 @@ import { DialogService, ResizableCardLayoutConfig, LayoutSize, ResizedEvent } fr
     templateUrl: './resizable-card-layout-example.component.html',
     styleUrls: ['./resizable-card-layout-example.component.scss']
 })
-export class ResizableCardLayoutExampleComponent implements OnInit {
+export class ResizableCardLayoutExampleComponent {
     layoutConfig: ResizableCardLayoutConfig;
     layoutSize: LayoutSize;
 
@@ -33,7 +33,30 @@ export class ResizableCardLayoutExampleComponent implements OnInit {
 
     constructor(private _dialogService: DialogService) {}
 
-    ngOnInit(): void {
+    openDialog(dialogTemplate: TemplateRef<any>): void {
+        this._dialogService.open(dialogTemplate, {
+            mobile: true,
+            verticalPadding: true
+        });
+        this._initialData();
+    }
+
+    onStepChange(event: ResizedEvent): void {
+        this._showData(event);
+    }
+
+    onMiniHeaderHeight(event: ResizedEvent): void {
+        switch (event.card.title) {
+            case 'card3':
+                this.showTableHeader = false;
+                this.card3TableData = [];
+                break;
+            default:
+                this.showTableHeader = true;
+        }
+    }
+
+    private _initialData(): void {
         this.listData = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 16, 17];
         this.tableColumns = ['name', 'type', 'region', 'rate', 'quantity', 'tax', 'totalWeight', 'totalAmount'];
 
@@ -127,28 +150,6 @@ export class ResizableCardLayoutExampleComponent implements OnInit {
         this.card7Data = this.listData.slice(0, this.initialRows);
         this.card3TableColumns = this.tableColumns.slice(0, 4);
         this.card3TableData = this.tableData.slice(0, this.initialRows);
-    }
-
-    openDialog(dialogTemplate: TemplateRef<any>): void {
-        this._dialogService.open(dialogTemplate, {
-            mobile: true,
-            verticalPadding: true
-        });
-    }
-
-    onStepChange(event: ResizedEvent): void {
-        this._showData(event);
-    }
-
-    onMiniHeaderHeight(event: ResizedEvent): void {
-        switch (event.card.title) {
-            case 'card3':
-                this.showTableHeader = false;
-                this.card3TableData = [];
-                break;
-            default:
-                this.showTableHeader = true;
-        }
     }
 
     /** Decides how much data is shown on card */

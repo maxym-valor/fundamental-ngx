@@ -16,12 +16,23 @@ export type ResizeDirection = 'vertical' | 'horizontal' | 'both';
 
 // Card resizes in step of fixed values. values are in pixel
 export const horizontalResizeStep = 320;
+
+// vertical resize step
 export const verticalResizeStep = 16;
+
+// gap of 1rem between the cards
 export const gap = 16;
+
+// threshold offset for horizontal resizing.
 export const horizontalResizeOffset = 160;
+
+// threshold offset for vertical resizing.
 export const verticalResizeOffset = 10;
+
+// state of card. Increasing width, no change or decreasing width.
 export type CardState = 1 | 0 | -1;
 
+// card is given numeric value, on which sorting of cards is done
 let cardRank = 1;
 let cardUniqueId = 0;
 
@@ -33,12 +44,13 @@ let cardUniqueId = 0;
     encapsulation: ViewEncapsulation.None
 })
 export class ResizableCardItemComponent implements FocusableOption {
-    /** Set card properties from the config received */
+    /** get card properties from the config */
     @Input()
     get config(): ResizableCardItemConfig {
         return this._config;
     }
 
+    /** Set card properties from the config received */
     set config(config: ResizableCardItemConfig) {
         this._config = config;
         this._initialSetup();
@@ -53,13 +65,16 @@ export class ResizableCardItemComponent implements FocusableOption {
     @Input()
     title: string;
 
-    /** Position rank  of card.
-     * using setter to determine max value between user given value and default value
-     * */
+    // return rank of card
     @Input()
     get rank(): number {
         return this._rank;
     }
+
+    /**
+     * Position rank  of card.
+     * using setter to determine max value between user given value and default value
+     * */
     set rank(rankValue: number) {
         this._rank = rankValue ? rankValue : cardRank++;
         if (rankValue > cardRank) {
@@ -67,41 +82,55 @@ export class ResizableCardItemComponent implements FocusableOption {
         }
     }
 
-    /** Number of column span card width takes*/
+    /** Number of column span card width takes */
     @Input()
     get cardWidthColSpan(): number {
         return this._cardWidthColSpan;
     }
+
+    /**
+     * set the number of column span, card will take.
+     * It sets the width of the card accordingly
+     */
     set cardWidthColSpan(colSpan: number) {
         this._cardWidthColSpan = colSpan;
         this._setCardWidth();
     }
 
-    /** Number of row span card height takes*/
+    /** Number of row span card height takes */
     @Input()
     get cardHeightRowSpan(): number {
         return this._cardHeightRowSpan;
     }
+
+    /**
+     * set number of row span, card will take
+     * It sets the height of the card accordingly
+     */
     set cardHeightRowSpan(rowSpan: number) {
         this._cardHeightRowSpan = rowSpan;
         this._setCardHeight();
     }
 
-    /** Number of row span card mini header height takes*/
+    /** return number of row span card mini header height takes */
     @Input()
     get cardMiniHeaderRowSpan(): number {
         return this._cardMiniHeaderRowSpan;
     }
+
+    /** set number of row span card mini header height takes */
     set cardMiniHeaderRowSpan(rowSpan: number) {
         this._cardMiniHeaderRowSpan = rowSpan;
         this._setCardMiniHeaderHeight();
     }
 
-    /** Number of row span card mini content height takes*/
+    /** return number of row span card mini content height takes */
     @Input()
     get cardMiniContentRowSpan(): number {
         return this._cardMiniContentRowSpan;
     }
+
+    /** set number of row span card mini content height takes */
     set cardMiniContentRowSpan(rowSpan: number) {
         this._cardMiniContentRowSpan = rowSpan;
         this._setCardMiniContentHeight();
@@ -175,22 +204,43 @@ export class ResizableCardItemComponent implements FocusableOption {
     /** Change in rank from previous value*/
     prevRank = 0;
 
+    /** @hidden */
     private _cardWidthColSpan: number;
+
+    /** @hidden */
     private _cardHeightRowSpan: number;
+
+    /** @hidden */
     private _cardMiniHeaderRowSpan: number;
+
+    /** @hidden */
     private _cardMiniContentRowSpan?: number;
 
     /** @hidden config values for card */
     private _config: ResizableCardItemConfig;
+
+    /** @hidden previous cursor x position */
     private _prevX: number;
+
+    /** @hidden previous cursor y position */
     private _prevY: number;
+
+    /** @hidden */
     private _prevCardWidth: number;
+
+    /** @hidden */
     private _prevCardHeight: number;
 
     /** @hidden flag to control resize */
     private _resize = false;
+
+    /** @hidden */
     private _resizeDirection: ResizeDirection;
+
+    /** @hidden */
     private _maxColumn: number;
+
+    /** @hidden */
     private _rank: number;
 
     constructor(private readonly _cd: ChangeDetectorRef, private readonly _elementRef: ElementRef) {}
@@ -216,7 +266,7 @@ export class ResizableCardItemComponent implements FocusableOption {
     }
 
     /**
-     * When mouse moves to resize the card.
+     * @hidden When mouse moves to resize the card.
      * using window:mousemove so, resize will happen smoothly
      * @param event: MouseEvent
      */
@@ -249,6 +299,10 @@ export class ResizableCardItemComponent implements FocusableOption {
                 this._horizontalResizing(clientX);
                 break;
             case 'vertical':
+                this._verticalResizing(clientY);
+                break;
+            default:
+                this._horizontalResizing(clientX);
                 this._verticalResizing(clientY);
         }
 
@@ -351,6 +405,8 @@ export class ResizableCardItemComponent implements FocusableOption {
             case 'xl':
                 this._maxColumn = 4;
                 break;
+            default:
+                this._maxColumn = 1;
         }
         return this._maxColumn;
     }

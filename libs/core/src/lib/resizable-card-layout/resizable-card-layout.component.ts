@@ -47,12 +47,13 @@ export class ResizableCardLayoutComponent implements OnInit, AfterViewInit, Afte
     @Input()
     layoutConfig: ResizableCardLayoutConfig;
 
-    /** Available layout width */
+    /** return layout size */
     @Input()
     get layoutSize(): LayoutSize {
         return this._layout;
     }
 
+    /** set layout size. vailable options are 'sm', 'md', 'lg' and 'xl' */
     set layoutSize(layoutSize: LayoutSize) {
         this._layout = layoutSize;
         this._setLayoutColumns(layoutSize);
@@ -247,7 +248,7 @@ export class ResizableCardLayoutComponent implements OnInit, AfterViewInit, Afte
         this._keyboardEventsManager = new FocusKeyManager(this.resizeCardItems).withWrap();
     }
 
-    /** Emit layoutChange event with updated card dimensions */
+    /** @hidden Emit layoutChange event with updated card dimensions */
     private _emitLayoutChange(): void {
         const latestCardConfig: ResizableCardLayoutConfig = [];
         this.resizeCardItems.forEach((card) => {
@@ -302,7 +303,7 @@ export class ResizableCardLayoutComponent implements OnInit, AfterViewInit, Afte
     }
 
     /**
-     * Method to handle card vertical resize and trigger the layout change
+     * @hidden Method to handle card vertical resize and trigger the layout change
      * @param event: ResizedEvent
      */
     private _handleVerticalResize(event: ResizedEvent): void {
@@ -315,7 +316,7 @@ export class ResizableCardLayoutComponent implements OnInit, AfterViewInit, Afte
     }
 
     /**
-     * Method to handle card horizontal resize and trigger the layout change
+     * @hidden Method to handle card horizontal resize and trigger the layout change
      * @param event : ResizedEvent
      */
     private _handleHorizontalResize(event: ResizedEvent): void {
@@ -379,7 +380,7 @@ export class ResizableCardLayoutComponent implements OnInit, AfterViewInit, Afte
     }
 
     /**
-     * Method to move card down, when another card width is increasing
+     * @hidden Method to move card down, when another card width is increasing
      * Method to loop till this._columns -1 positions and exchange the rank
      * @param currentCardIndex: Index of current card
      */

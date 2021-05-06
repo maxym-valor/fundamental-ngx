@@ -14,20 +14,20 @@
         </div>
 
         <ng-container *ngIf="resizable">
-            <ng-container *ngTemplateOutlet="verticalHandleTpt"></ng-container>
-            <ng-container *ngTemplateOutlet="horizontalHandleTpt"></ng-container>
+            <ng-container *ngTemplateOutlet="verticalHandleTemplate"></ng-container>
+            <ng-container *ngTemplateOutlet="horizontalHandleTemplate"></ng-container>
         </ng-container>
     </div>
     
     <div class="fd-resizable-card-expansion" [style.width.px]="resizeIndicationBorderWidth" [style.height.px]="cardHeight"></div>
 </div>
 
-<ng-template #verticalHandleTpt>
+<ng-template #verticalHandleTemplate>
     <div #verticalHandle class="fd-resizable-card-layout__resize--vertical"
         (mousedown)="onMouseDown($event, 'horizontal')"></div>
 </ng-template>
 
-<ng-template #horizontalHandleTpt>
+<ng-template #horizontalHandleTemplate>
     <div #horizontalHandle class="fd-resizable-card-layout__resize--horizontal"
         (mousedown)="onMouseDown($event, 'vertical')"></div>
 </ng-template>

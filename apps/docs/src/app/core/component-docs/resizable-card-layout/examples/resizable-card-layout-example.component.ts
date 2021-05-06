@@ -1,4 +1,4 @@
-import { Component, OnInit, TemplateRef } from '@angular/core';
+import { Component, TemplateRef } from '@angular/core';
 import { DialogService, ResizableCardLayoutConfig, LayoutSize, ResizedEvent } from '@fundamental-ngx/core';
 
 @Component({

@@ -1,11 +1,10 @@
-import { ChangeDetectionStrategy, Component, OnInit, TemplateRef } from '@angular/core';
+import { Component, OnInit, TemplateRef } from '@angular/core';
 import { DialogService, ResizableCardLayoutConfig, LayoutSize } from '@fundamental-ngx/core';
 
 @Component({
     selector: 'fd-resizable-card-layout-example-layoutconfig',
     templateUrl: './resizable-card-layout-example-layoutconfig.component.html',
-    styleUrls: ['./resizable-card-layout-example-layoutconfig.component.scss'],
-    changeDetection: ChangeDetectionStrategy.OnPush
+    styleUrls: ['./resizable-card-layout-example.component.scss']
 })
 export class ResizableCardLayoutExampleLayoutConfigComponent implements OnInit {
     layoutConfig: ResizableCardLayoutConfig;

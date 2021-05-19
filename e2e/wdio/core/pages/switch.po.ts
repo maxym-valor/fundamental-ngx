@@ -1,38 +1,33 @@
 import { CoreBaseComponentPo } from './core-base-component.po';
-import { waitForElDisplayed, waitForPresent, getElementArrayLength } from '../../driver/wdio';
-import { buttonPlaygroundTag } from '../fixtures/testData/button-tags';
+import { waitForElDisplayed, waitForPresent} from '../../driver/wdio';
 
 export class switchPo extends CoreBaseComponentPo {
     private url = '/switch';
 
     root = '#page-content';
 
-    switchSizesExample = 'fd-switch-sizes-example '
-    disabledSwitchExample = 'fd-disabled-switch-example '
-    switchBindingExample = 'fd-switch-binding-example '
-    semanticswitchExample = 'fd-semantic-switch-example '
-    switchFormsExample = 'fd-switch-forms-example '
-    playGroundSwitchExample = '.col.playground-content '
-<<<<<<< HEAD
-     
-=======
-    
->>>>>>> 252973c0152e07e589180447f42ccb1a8c2f9450
-    toggle = '.fd-switch'
-    toggleInput = '.fd-switch__input'
-    disabledToggle = 'fd-switch is-disabled'
-    disabledAndCompactToggle = 'fd-switch fd-switch--compact is-disabled'
-    switchSizes = this.switchSizesExample + this.toggle
-    disabledSwitch = this.disabledSwitchExample + this.toggle
-    bindSwitch = this.switchBindingExample + this.toggle
-    semanticSwitch = this.semanticswitchExample + this.toggle
-    switchformSwtich = this.switchFormsExample + this.toggle
-    playGroundSwitch = buttonPlaygroundTag + this.toggle
-    checkboxes = '.fd-checkbox__label'
+    switchSizesExample = 'fd-switch-sizes-example ';
+    disabledSwitchExample = 'fd-disabled-switch-example ';
+    switchBindingExample = 'fd-switch-binding-example ';
+    semanticswitchExample = 'fd-semantic-switch-example ';
+    switchFormsExample = 'fd-switch-forms-example ';
+    playGroundSwitchExample = '.col.playground-content ';
 
-    declineIcon = this.semanticswitchExample + '.sap-icon--decline'
-    acceptIcon = this.semanticswitchExample + '.sap-icon--accept'
-    switchBtn = this.switchBindingExample + '.fd-button--standard'
+    toggle = '.fd-switch';
+    toggleInput = '.fd-switch__input';
+    disabledToggle = 'fd-switch is-disabled';
+    disabledAndCompactToggle = 'fd-switch fd-switch--compact is-disabled';
+    switchSizes = this.switchSizesExample + this.toggle;
+    disabledSwitch = this.disabledSwitchExample + this.toggle;
+    bindSwitch = this.switchBindingExample + this.toggle;
+    semanticSwitch = this.semanticswitchExample + this.toggle;
+    switchformSwtich = this.switchFormsExample + this.toggle;
+    playGroundSwitch = this.playGroundSwitchExample + this.toggle;
+    checkboxes = '.fd-checkbox__label';
+
+    declineIcon = this.semanticswitchExample + '.sap-icon--decline';
+    acceptIcon = this.semanticswitchExample + '.sap-icon--accept';
+    switchBtn = this.switchBindingExample + '.fd-button--standard';
     
     open(): void {
         super.open(this.url);

@@ -70,7 +70,7 @@ export function acceptAlert(): void {
     browser.acceptAlert();
 }
 
-export function isAlertOpen(): boolean{
+export function isAlertOpen(): boolean {
     return browser.isAlertOpen()
 }
 
@@ -200,6 +200,11 @@ export function sendKeys(keys: string | string[]): void {
 export function uploadFile(selector: string, pathToFile: string, index: number = 0): void {
     checkSelectorExists(selector, index);
     $$(selector)[index].setValue(pathToFile);
+}
+
+export function getElementClass(selector: string, index: number = 0): string {
+    checkSelectorExists(selector, index);
+    return $$(selector)[index].getAttribute('class');
 }
 
 export function getAttributeByName(selector: string, attrName: string, index: number = 0): string {

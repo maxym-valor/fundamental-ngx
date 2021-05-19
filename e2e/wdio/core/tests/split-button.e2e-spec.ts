@@ -15,7 +15,7 @@ describe('Split-button test suite', () => {
     const {
         mainbtn, splitItem, splitMenu, buttonBehaviorExample,
         iconBehaviorExample, buttonTypesExample, buttonPragmaticalExample,
-        buttonTemplateExample, icons, arrowDownBtn
+        buttonTemplateExample, arrowDownBtn
     } = splitButtonPage;
 
     beforeAll(() => {
@@ -32,11 +32,7 @@ describe('Split-button test suite', () => {
         checkMenuOpens(buttonTypesExample);
         checkMenuOpens(buttonTemplateExample);
         checkMenuOpens(buttonPragmaticalExample);
-
-        click(iconBehaviorExample + icons, 0);
-        expect(isElementDisplayed(splitMenu)).toBe(true);
-        click(iconBehaviorExample + icons, 1);
-        expect(isElementDisplayed(splitMenu)).toBe(true);
+        checkMenuOpens(iconBehaviorExample)
 
     });
 
@@ -77,7 +73,6 @@ describe('Split-button test suite', () => {
         splitButtonPage.checkRtlSwitch();
     });
 
-
     it('should check examples visual regression', () => {
         splitButtonPage.saveExampleBaselineScreenshot();
         expect(splitButtonPage.compareWithBaseline()).toBeLessThan(5);
@@ -100,4 +95,4 @@ describe('Split-button test suite', () => {
             click(section + arrowDownBtn, i);
         }
     }
-});
+}); 

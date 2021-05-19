@@ -203,6 +203,11 @@ export function getAttributeByName(selector: string, attrName: string, index: nu
     return $$(selector)[index].getAttribute(attrName);
 }
 
+export function getElementClass(selector: string, index: number = 0): string {
+    checkSelectorExists(selector, index);
+    return $$(selector)[index].getAttribute('class');
+}
+
 export function getAttributeByNameArr(selector: string, attrName: string, sliceStart?: number, sliceEnd?: number): string[] {
     checkSelectorExists(selector);
     return $$(selector).slice(sliceStart, sliceEnd).map((element) => element.getAttribute(attrName));

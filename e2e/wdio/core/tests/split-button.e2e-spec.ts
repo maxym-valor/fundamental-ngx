@@ -14,7 +14,7 @@ describe('Split-button test suite', () => {
     const splitButtonPage = new SplitButtonPo();
     const {
         mainbtn, splitItem, splitMenu, buttonBehaviorExample,
-        iconBehaviorExample, button, buttonTypesExample, buttonPragmaticalExample,
+        iconBehaviorExample, buttonTypesExample, buttonPragmaticalExample,
         buttonTemplateExample, icons, arrowDownBtn
     } = splitButtonPage;
 
@@ -73,27 +73,27 @@ describe('Split-button test suite', () => {
         acceptAlert();
     });
 
-    xit('should check RTL and LTR orientation', () => {
+    it('should check RTL and LTR orientation', () => {
         splitButtonPage.checkRtlSwitch();
     });
 
 
-    xit('should check examples visual regression', () => {
+    it('should check examples visual regression', () => {
         splitButtonPage.saveExampleBaselineScreenshot();
         expect(splitButtonPage.compareWithBaseline()).toBeLessThan(5);
     });
 
     function checkMenuOpens(section: string): void {
-        const length = getElementArrayLength(section + arrowDownBtn);
-        for (let i = 0; i < length; i++) {
+        const itemsLength = getElementArrayLength(section + arrowDownBtn);
+        for (let i = 0; i < itemsLength; i++) {
             click(section + arrowDownBtn, i);
             expect(isElementDisplayed(splitMenu)).toBe(true);
             click(section + arrowDownBtn, i);
         }
     }
     function checkSplitMenuQuantity(section: string): void {
-        const length = getElementArrayLength(section + arrowDownBtn);
-        for (let i = 0; i < length; i++) {
+        const itemsLength = getElementArrayLength(section + arrowDownBtn);
+        for (let i = 0; i < itemsLength; i++) {
             click(section + arrowDownBtn, i);
             const splitBtnArr = getElementArrayLength(splitItem);
             expect(splitBtnArr).toBeGreaterThanOrEqual(2);

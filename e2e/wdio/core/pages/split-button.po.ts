@@ -1,5 +1,5 @@
 import { CoreBaseComponentPo } from './core-base-component.po';
-import { waitForElDisplayed, waitForPresent, getElementArrayLength } from '../../driver/wdio';
+import { waitForElDisplayed, waitForPresent} from '../../driver/wdio';
 
 export class SplitButtonPo extends CoreBaseComponentPo {
     private url = '/splitButton';
@@ -12,13 +12,13 @@ export class SplitButtonPo extends CoreBaseComponentPo {
     buttonPragmaticalExample = 'fd-split-button-programmatical-example ';
     buttonTemplateExample = 'fd-split-button-template-example ';
 
-    mainbtn = '.fd-button__text'
-    arrowDownBtn = '.sap-icon--slim-arrow-down'
+    mainbtn = '.fd-button__text';
+    arrowDownBtn = '.sap-icon--slim-arrow-down';
     icons = 'fd-icon';
-    cartIcon = 'fd-icon.sap-icon--cart'
-    menuIcon = 'fd-icon.sap-icon--menu'
+    cartIcon = 'fd-icon.sap-icon--cart';
+    menuIcon = 'fd-icon.sap-icon--menu';
     button = '.fd-button';
-    splitMenu = 'div.fd-popover__popper'
+    splitMenu = 'div.fd-popover__popper';
     splitItem = '.fd-menu__list li';
 
 

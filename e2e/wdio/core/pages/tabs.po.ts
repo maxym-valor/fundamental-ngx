@@ -19,7 +19,7 @@ export class TabsPo extends CoreBaseComponentPo {
 
     tabsWrapper = '.fd-tabs__wrapper ';
     tab = '.fd-tabs__item';
-    fdTab = '.fd-tabs__wrapper .fd-tabs__item'
+    fdTab = '.fd-tabs__wrapper .fd-tabs__item';
     chooseTabsBtn = this.SelectionExample + '.fd-button';
     collapsibleTab = 'fd-tab-list:nth-child(6) div.fd-tabs__item';
 
@@ -30,7 +30,7 @@ export class TabsPo extends CoreBaseComponentPo {
     expandedListItem = this.expandedList + '.fd-menu__title';
     moreBtn = this.collapsibleOverflowExample + '.fd-tabs__item--overflow';
 
-    tabPanel = this.collapsibleExample + '.fd-tabs__panel'
+    tabPanel = this.collapsibleExample + '.fd-tabs__panel';
 
     // playground form
     modeSelect = '#playgroundmode ';
@@ -44,10 +44,10 @@ export class TabsPo extends CoreBaseComponentPo {
     counterField = '#playgroundcounter';
     contentField = '#playgroundcontent';
     icon1 = '#playgroundicon ';
-    acceleratedIcon = this.icon1 + 'option:nth-child(2)'
-    titleAndCountSection = 'playground .fd-tabs__item:first-of-type'
-    contentSection = '#fd-tab-panel0'
-    fdIcon = this.playGroundExample + 'fd-icon'
+    acceleratedIcon = this.icon1 + 'option:nth-child(2)';
+    titleAndCountSection = 'playground .fd-tabs__item:first-of-type';
+    contentSection = '#fd-tab-panel0';
+    fdIcon = this.playGroundExample + 'fd-icon';
 
     open(): void {
         super.open(this.url);

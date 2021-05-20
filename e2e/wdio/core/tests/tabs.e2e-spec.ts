@@ -1,4 +1,5 @@
 import {
+    browserIsFirefox,
     click,
     doubleClick,
     getAttributeByName,
@@ -9,7 +10,8 @@ import {
     setValue,
     waitForPresent,
 } from '../../driver/wdio';
-import { TabsPo } from '../../core/pages/tabs.po';
+import { string_value } from '../../platform/fixtures/testData/input-group';
+import { TabsPo } from '../pages/tabs.po';
 
 describe('Tabs test suite', () => {
 
@@ -45,26 +47,27 @@ describe('Tabs test suite', () => {
     });
 
     it('add-remove tab testing', () => {
-        const lengthBefore = getElementArrayLength(AddExample + fdTab);
+        const originalLength = getElementArrayLength(AddExample + fdTab);
         click(addBtn);
-        let lengthAfter = getElementArrayLength(AddExample + fdTab);
-        expect(lengthAfter).toBeGreaterThan(lengthBefore);
+        let newLength = getElementArrayLength(AddExample + fdTab);
+        expect(newLength).toBeGreaterThan(originalLength);
         doubleClick(removeBtn);
-        lengthAfter = getElementArrayLength(AddExample + fdTab);
-        expect(lengthBefore).toBeGreaterThan(lengthAfter)
-        for (lengthAfter; lengthAfter !== 1; lengthAfter--)
+        newLength = getElementArrayLength(AddExample + fdTab);
+        expect(originalLength).toBeGreaterThan(newLength)
+        for (newLength; newLength !== 1; newLength--) {
             click(removeBtn)
+        }
         click(removeBtn)
-        lengthAfter = getElementArrayLength(AddExample + fdTab);
+        const lengthAfterRemoving = getElementArrayLength(AddExample + fdTab);
         // Check that the last tab can not be removed
-        expect(lengthAfter).toEqual(1)
+        expect(lengthAfterRemoving).toEqual(1)
 
     });
 
     it('Check choosing tabs via buttons', () => {
         click(chooseTabsBtn, 1)
         expect(getAttributeByName(SelectionExample + fdTab, 'aria-selected', 1)).toEqual('true')
-        click(chooseTabsBtn, 0)
+        click(chooseTabsBtn)
         expect(getAttributeByName(SelectionExample + fdTab, 'aria-selected', 0)).toEqual('true')
         expect(getAttributeByName(SelectionExample + fdTab, 'aria-selected', 1)).toEqual('false')
     });
@@ -79,7 +82,7 @@ describe('Tabs test suite', () => {
         expect(getText(collapsibleOverflowExample + collapsibleTab, length - 1)).toEqual(firstPointOfExpandedList);
     });
     it('Should check collapsible tabs', () => {
-        click(collapsibleExample + fdTab, 2);
+        clickOnTab(collapsibleExample, 2);
         expect(getAttributeByName(tabPanel, 'aria-expanded', 2)).toEqual('true');
     });
 
@@ -92,22 +95,19 @@ describe('Tabs test suite', () => {
             click(filterMode)
             click(compactCheckBox)
             expect(getAttributeByName(threeElementsRow, 'ng-reflect-compact')).toEqual('true')
-            // these assertions skipped due wdio bug
-            //expect(getAttributeByName(threeElementsRow, 'ng-reflect-mode')).toEqual('filter')
-            //expect(getElementClass('playground .fd-tabs')).toContain('fd-tabs--filter')
+            expect(getElementClass('playground .fd-tabs')).toContain('fd-tabs--filter')
             setValue(titleField, myTittle); setValue(counterField, myCount); setValue(contentField, myContent);
             expect(getText(titleAndCountSection)).toContain(myTittle)
             expect(getText(titleAndCountSection)).toContain(myCount)
             expect(getText(contentSection)).toEqual(myContent)
         });
-        // skipped due a wdio bug
         xit('check that icon changes according to chosen', () => {
             click(modeSelect)
             click(iconOnlyMode)
             click(compactCheckBox)
             click(icon1)
             click(acceleratedIcon)
-            expect(getElementClass(fdIcon, 0)).toContain('sap-icon--accelerated')
+            expect(getElementClass(fdIcon)).toContain('sap-icon--accelerated')
         });
 
     });
@@ -123,27 +123,34 @@ describe('Tabs test suite', () => {
 
     function checkTabsSelect(section: string): boolean {
         let length;
-        if (section == collapsibleOverflowExample) {
+        if (section === collapsibleOverflowExample) {
             length = getElementArrayLength(section + fdTab) - 3
         }
-        else length = getElementArrayLength(section + fdTab)
+        if (section !== collapsibleOverflowExample) {
+            length = getElementArrayLength(section + fdTab)
+        }
         for (let i = 0; i < length; i++) {
             if (section === collapsibleExample && i === 0) {
                 click(section + fdTab, i)
-                if (getAttributeByName(section + fdTab, 'aria-selected', i) === 'true'){
+                if (getAttributeByName(section + fdTab, 'aria-selected', i) === 'true') {
                     return false;
                 }
             }
-            else if (section === stackendContentExample && i === 0) {
+            if (section === stackendContentExample && i === 0) {
                 expect(getAttributeByName(section + fdTab, 'aria-selected', i)).toEqual('true')
             }
-            else {
+            if (section !== collapsibleExample && section !== stackendContentExample && i !== 0) {
                 click(section + fdTab, i)
-                if (getAttributeByName(section + fdTab, 'aria-selected', i) !== 'true')
+                if (getAttributeByName(section + fdTab, 'aria-selected', i) !== 'true') {
                     return false;
+                }
             }
         }
         return true;
+    }
+
+    function clickOnTab(section: string, index: number = 0): void {
+        return (browserIsFirefox() ? click(section + 'fd-tabs__link', index): click(section + fdTab, index))
     }
 
 });

@@ -4,14 +4,15 @@ import {
     getAttributeByName,
     getElementArrayLength,
     getElementClass,
+    pause,
     refreshPage,
     waitForPresent
 } from '../../driver/wdio';
-import { switchPo } from '../../core/pages/switch.po';
+import { SwitchPo } from '../pages/switch.po';
 
 describe('Switch test suite', () => {
 
-    const switchPage = new switchPo();
+    const switchPage = new SwitchPo();
     const {
         switchSizes, switchSizesExample, toggle,
         toggleInput, switchBindingExample, switchFormsExample, semanticswitchExample,
@@ -38,21 +39,21 @@ describe('Switch test suite', () => {
 
     it('Should check icons on semantic toggles', () => {
         for (let i = 0; i < 2; i++) {
-            expect(elementDisplayed(declineIcon, i)).toBe(true);
+            expect(elementDisplayed(declineIcon, i)).toBe(true, 'decline icon is not displayed');
             click(semanticSwitch, i);
-            browser.pause(1000)
-            expect(elementDisplayed(declineIcon, i)).toBe(false);
-            expect(elementDisplayed(acceptIcon, i)).toBe(true);
+            pause(1000)
+            expect(elementDisplayed(declineIcon, i)).toBe(false, 'decline icon is displayed');
+            expect(elementDisplayed(acceptIcon, i)).toBe(true, 'accept icon is not displayed');
         }
     });
 
     it('Should check toggle state changes by click on buttons', () => {
         click(switchBtn, 1);
-        expect(checkToggleState(switchBindingExample)).toBe(true);
+        expect(checkToggleState(switchBindingExample)).toBe(true, 'toggle is not enabled');
         click(switchBtn, 1);
-        expect(checkToggleState(switchBindingExample)).toBe(false);
+        expect(checkToggleState(switchBindingExample)).toBe(false, 'toggle not enabled');
         click(switchBtn, 0);
-        expect(checkToggleState(switchBindingExample)).toBe(true);
+        expect(checkToggleState(switchBindingExample)).toBe(true, 'toggle is not enabled');
     });
 
     it('should check switch toggle manage by checkboxes', () => {
@@ -66,11 +67,11 @@ describe('Switch test suite', () => {
         expect(getElementClass(playGroundSwitchExample + toggle)).toContain('fd-switch--compact')
     });
 
-    it('should check RTL and LTR orientation', () => {
+    xit('should check RTL and LTR orientation', () => {
         switchPage.checkRtlSwitch();
     });
 
-    it('should check examples visual regression', () => {
+    xit('should check examples visual regression', () => {
         switchPage.saveExampleBaselineScreenshot();
         expect(switchPage.compareWithBaseline()).toBeLessThan(5);
     });
@@ -79,24 +80,24 @@ describe('Switch test suite', () => {
     function checkSwitchingWork(section: string, length: number = getElementArrayLength(section + toggle),
         switchToggle: string = section + toggle, flag: string = section + toggleInput): void {
         for (let i = 0; i < length; i++) {
-            if (getElementClass(switchToggle, i) != disabledToggle) {
+            if (getElementClass(switchToggle, i) !== disabledToggle) {
                 if (getAttributeByName(flag, 'aria-checked', i) == 'true') {
                     click(switchToggle, i);
-                    expect(checkToggleState(section, i)).toBe(false);
+                    expect(checkToggleState(section, i)).toBe(false, 'toggle is enabled');
                 }
-                else {
+                if(getAttributeByName(flag, 'aria-checked', i) == 'false'){
                     click(switchToggle, i);
-                    expect(checkToggleState(section, i)).toBe(true);
+                    expect(checkToggleState(section, i)).toBe(true, 'toggle is disabled');
                 }
             }
         }
     }
     function checkToggleState(section: string, i: number = 0, flag: string = section + toggleInput): boolean {
-        if (getAttributeByName(section + toggle, 'class', i) != disabledToggle) {
-            if (getAttributeByName(flag, 'aria-checked', i) == 'true')
+        if (getAttributeByName(section + toggle, 'class', i) !== disabledToggle) {
+            if (getAttributeByName(flag, 'aria-checked', i) === 'true')
                 return true;
-            else return false;
+            if(getAttributeByName(flag, 'aria-checked', i) !== 'true')
+                return false;
         }
     }
-
 });

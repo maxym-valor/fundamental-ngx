@@ -1,7 +1,7 @@
 import { CoreBaseComponentPo } from './core-base-component.po';
 import { waitForElDisplayed, waitForPresent} from '../../driver/wdio';
 
-export class switchPo extends CoreBaseComponentPo {
+export class SwitchPo extends CoreBaseComponentPo {
     private url = '/switch';
 
     root = '#page-content';

@@ -86,7 +86,7 @@ describe('Tabs test suite', () => {
         expect(getAttributeByName(tabPanel, 'aria-expanded', 2)).toEqual('true');
     });
 
-    xdescribe('Tabs constructor testing', () => {
+    describe('Tabs constructor testing', () => {
         it('Check that tabs change according to chosen filter and compact modes', () => {
             const myTittle = 'my custom title';
             const myCount = 'my count';
@@ -101,7 +101,7 @@ describe('Tabs test suite', () => {
             expect(getText(titleAndCountSection)).toContain(myCount)
             expect(getText(contentSection)).toEqual(myContent)
         });
-        xit('check that icon changes according to chosen', () => {
+        it('check that icon changes according to chosen', () => {
             click(modeSelect)
             click(iconOnlyMode)
             click(compactCheckBox)
@@ -112,12 +112,12 @@ describe('Tabs test suite', () => {
 
     });
 
-    xit('should check examples visual regression', () => {
+    it('should check examples visual regression', () => {
         tabsPage.saveExampleBaselineScreenshot();
         expect(tabsPage.compareWithBaseline()).toBeLessThan(5);
     });
 
-    xit('should check RTL and LTR orientation', () => {
+    it('should check RTL and LTR orientation', () => {
         tabsPage.checkRtlSwitch();
     });
 

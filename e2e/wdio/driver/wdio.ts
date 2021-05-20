@@ -24,7 +24,7 @@ export function open(path: string = ''): void {
 
 export function pause(waitTime: number = defaultWaitTime()): void {
     browser.pause(waitTime);
-}
+} 
 // tslint:disable-next-line:no-shadowed-variable
 export function execute(source): void {
     browser.execute(source);

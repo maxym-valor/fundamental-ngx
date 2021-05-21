@@ -47,23 +47,23 @@ describe('Split-button test suite', () => {
     it('Verify user can choose only one option at a time', () => {
         for (let i = 0; i < 2; i++) {
             click(buttonBehaviorExample + arrowDownBtn);
-            expect(isElementDisplayed(splitMenu)).toBe(true);
+            expect(isElementDisplayed(splitMenu)).toBe(true, 'drop-down is not visible');
             click(splitItem, i);
             acceptAlert();
             const menuItemValue = getText(splitItem, i);
             const mainButtonValue = getText(mainbtn);
-            expect(mainButtonValue).toEqual(menuItemValue);
+            expect(mainButtonValue).toEqual(menuItemValue, 'value on main button is not equal chosen value');
             click(buttonBehaviorExample + arrowDownBtn);
         }
     });
-
-    it('After did choose expand menu should close', () => {
+    // skipped due https://github.com/SAP/fundamental-ngx/issues/5348
+    xit('After did choose expand menu should close', () => {
         click(buttonBehaviorExample + arrowDownBtn);
-        expect(isElementDisplayed(splitMenu)).toBe(true);
+        expect(isElementDisplayed(splitMenu)).toBe(true, 'drop-down is not visible');
         click(splitItem);
         acceptAlert();
         // after choose split button in menu - menu should be closed
-        expect(isElementDisplayed(splitMenu)).toBe(false);
+        expect(isElementDisplayed(splitMenu)).toBe(false, 'drop-down is not closed');
         click(mainbtn);
         // after click on mainbtn an alert appears
         acceptAlert();
@@ -82,7 +82,7 @@ describe('Split-button test suite', () => {
         const itemsLength = getElementArrayLength(section + arrowDownBtn);
         for (let i = 0; i < itemsLength; i++) {
             click(section + arrowDownBtn, i);
-            expect(isElementDisplayed(splitMenu)).toBe(true);
+            expect(isElementDisplayed(splitMenu)).toBe(true, 'drop-down is not closed');
             click(section + arrowDownBtn, i);
         }
     }
@@ -91,7 +91,7 @@ describe('Split-button test suite', () => {
         for (let i = 0; i < itemsLength; i++) {
             click(section + arrowDownBtn, i);
             const splitBtnArr = getElementArrayLength(splitItem);
-            expect(splitBtnArr).toBeGreaterThanOrEqual(2);
+            expect(splitBtnArr).toBeGreaterThanOrEqual(2, 'quantity of elements less than two');
             click(section + arrowDownBtn, i);
         }
     }

@@ -208,6 +208,21 @@ export function getElementClass(selector: string, index: number = 0): string {
     return $$(selector)[index].getAttribute('class');
 }
 
+export function getElementTitle(selector: string, index: number = 0): string {
+    checkSelectorExists(selector, index);
+    return $$(selector)[index].getAttribute('title');
+}
+
+export function getElementAriaLabel(selector: string, index: number = 0): string {
+    checkSelectorExists(selector, index);
+    return $$(selector)[index].getAttribute('aria-label');
+}
+
+export function getElementPlaceholder(selector: string, index: number = 0): string {
+    checkSelectorExists(selector, index);
+    return $$(selector)[index].getAttribute('placeholder');
+}
+
 export function getAttributeByNameArr(selector: string, attrName: string, sliceStart?: number, sliceEnd?: number): string[] {
     checkSelectorExists(selector);
     return $$(selector).slice(sliceStart, sliceEnd).map((element) => element.getAttribute(attrName));

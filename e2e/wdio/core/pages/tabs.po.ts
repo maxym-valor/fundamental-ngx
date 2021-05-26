@@ -20,6 +20,7 @@ export class TabsPo extends CoreBaseComponentPo {
     tabsWrapper = '.fd-tabs__wrapper ';
     tab = '.fd-tabs__item';
     fdTab = '.fd-tabs__wrapper .fd-tabs__item';
+    fdTabFF = '.fd-tabs__link';
     chooseTabsBtn = this.SelectionExample + '.fd-button';
     collapsibleTab = 'fd-tab-list:nth-child(6) div.fd-tabs__item';
 
@@ -42,7 +43,7 @@ export class TabsPo extends CoreBaseComponentPo {
     compactFilterModeClass = 'fd-tabs fd-tabs--filter fd-tabs--m fd-tabs--compact';
     titleField = '#playgroundtitle';
     counterField = '#playgroundcounter';
-    contentField = '#playgroundcontent';
+
     icon1 = '#playgroundicon ';
     acceleratedIcon = this.icon1 + 'option:nth-child(2)';
     titleAndCountSection = 'playground .fd-tabs__item:first-of-type';

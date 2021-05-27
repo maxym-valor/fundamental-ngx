@@ -39,3 +39,4 @@ export class MessageBoxPo extends CoreBaseComponentPo {
         return super.compareWithBaseline(specName, this.getScreenshotFolder());
     }
 }
+ 

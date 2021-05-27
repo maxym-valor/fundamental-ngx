@@ -9,7 +9,7 @@ import {
 } from '../../driver/wdio';
 import {
     iconsArr, buttonClassArr
-} from '../fixtures/appData/message-box'
+} from '../fixtures/appData/message-box' 
 
 describe('Message-box test suits', function () {
     const messageBoxPage = new MessageBoxPo();

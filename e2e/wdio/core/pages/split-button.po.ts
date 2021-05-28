@@ -1,5 +1,5 @@
 import { CoreBaseComponentPo } from './core-base-component.po';
-import { waitForElDisplayed, waitForPresent, getElementArrayLength } from '../../driver/wdio';
+import { waitForElDisplayed, waitForPresent} from '../../driver/wdio';
 
 export class SplitButtonPo extends CoreBaseComponentPo {
     private url = '/splitButton';
@@ -7,22 +7,15 @@ export class SplitButtonPo extends CoreBaseComponentPo {
     root = '#page-content';
 
     buttonBehaviorExample = 'fd-split-button-behaviors-example ';
-    iconBehaviorExample = 'fd-split-button-icons-example';
-    buttonTypesExample = 'fd-split-button-types-example';
-    buttonPragmaticalExample = 'fd-split-button-programmatical-example';
-    buttonTemplateExample = 'fd-split-button-template-example';
+    iconBehaviorExample = 'fd-split-button-icons-example ';
+    buttonTypesExample = 'fd-split-button-types-example ';
+    buttonPragmaticalExample = 'fd-split-button-programmatical-example ';
+    buttonTemplateExample = 'fd-split-button-template-example ';
 
-    mainbtn = '.fd-button__text.fd-button-split__text.ng-star-inserted';
-    arrowDownBtn = '.sap-icon--slim-arrow-down.ng-star-inserted';
-    icons = 'fd-icon';
-    cartIcon = '.sap-icon--cart.ng-star-inserted';
-    menuIcon = '.sap-icon--menu.ng-star-inserted';
+    mainbtn = '.fd-button__text'
+    arrowDownBtn = 'fd-split-button .fd-button:nth-of-type(2)' ;
     button = '.fd-button';
-    openButton = '.fd-button__text.ng-star-inserted = Open';
-    closeButton = '.fd-button__text.ng-star-inserted = Close';
-    Select1Btn = '.fd-button__text.ng-star-inserted = Select Option 1';
-    Select2Btn = '.fd-button__text.ng-star-inserted = Select Option 2';
-    splitMenu = '.fd-popover__popper.fd-popover__popper--cdk-custom.fd-popover__popper--no-arrow';
+    splitMenu = 'div.fd-popover__popper'
     splitItem = '.fd-menu__list li';
 
 
@@ -36,11 +29,11 @@ export class SplitButtonPo extends CoreBaseComponentPo {
         return super.getScreenshotFolder(this.url);
     }
 
-    saveExampleBaselineScreenshot(specName: string = 'slider'): void {
+    saveExampleBaselineScreenshot(specName: string = 'split-button'): void {
         super.saveExampleBaselineScreenshot(specName, this.getScreenshotFolder());
     }
 
-    compareWithBaseline(specName: string = 'slider'): any {
+    compareWithBaseline(specName: string = 'split-button'): any {
         return super.compareWithBaseline(specName, this.getScreenshotFolder());
     }
 }

@@ -1,7 +1,5 @@
 import { CoreBaseComponentPo } from './core-base-component.po';
 import { waitForElDisplayed, waitForPresent} from '../../driver/wdio';
-import { waitForElDisplayed, waitForPresent, getElementArrayLength } from '../../driver/wdio';
-
 
 export class SplitButtonPo extends CoreBaseComponentPo {
     private url = '/splitButton';
@@ -15,10 +13,7 @@ export class SplitButtonPo extends CoreBaseComponentPo {
     buttonTemplateExample = 'fd-split-button-template-example ';
 
     mainbtn = '.fd-button__text'
-
     arrowDownBtn = 'fd-split-button .fd-button:nth-of-type(2)' ;
-    arrowDownBtn = 'fd-split-button .fd-button:nth-of-type(2)';
-  
     button = '.fd-button';
     splitMenu = 'div.fd-popover__popper'
     splitItem = '.fd-menu__list li';

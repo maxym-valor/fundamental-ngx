@@ -48,6 +48,7 @@ describe('Split-button test suite', () => {
         for (let i = 0; i < 2; i++) {
             click(buttonBehaviorExample + arrowDownBtn);
             expect(isElementDisplayed(splitMenu)).toBe(true, 'drop-down is not visible');
+            expect(isElementDisplayed(splitMenu)).toBe(true);
             click(splitItem, i);
             acceptAlert();
             const menuItemValue = getText(splitItem, i);
@@ -64,6 +65,19 @@ describe('Split-button test suite', () => {
         acceptAlert();
         // after choose split button in menu - menu should be closed
         expect(isElementDisplayed(splitMenu)).toBe(false, 'drop-down is not closed');
+            expect(mainButtonValue).toEqual(menuItemValue);
+            click(buttonBehaviorExample + arrowDownBtn);
+        }
+    });
+
+    // skipped due https://github.com/SAP/fundamental-ngx/issues/5348
+    xit('After did choose expand menu should close', () => {
+        click(buttonBehaviorExample + arrowDownBtn);
+        expect(isElementDisplayed(splitMenu)).toBe(true);
+        click(splitItem);
+        acceptAlert();
+        // after choose split button in menu - menu should be closed
+        expect(isElementDisplayed(splitMenu)).toBe(false);
         click(mainbtn);
         // after click on mainbtn an alert appears
         acceptAlert();
@@ -83,6 +97,7 @@ describe('Split-button test suite', () => {
         for (let i = 0; i < itemsLength; i++) {
             click(section + arrowDownBtn, i);
             expect(isElementDisplayed(splitMenu)).toBe(true, 'drop-down is not closed');
+            expect(isElementDisplayed(splitMenu)).toBe(true);
             click(section + arrowDownBtn, i);
         }
     }
@@ -96,3 +111,8 @@ describe('Split-button test suite', () => {
         }
     }
 }); 
+            expect(splitBtnArr).toBeGreaterThanOrEqual(2);
+            click(section + arrowDownBtn, i);
+        }
+    }
+});

@@ -15,6 +15,7 @@ export const buttonClassArr = [
     'positive',
     'positive',
     'positive'
+
 ];
 
 export const sectionsArr = [
@@ -27,4 +28,5 @@ export const sectionsArr = [
     'fd-complex-template-example ',
     'fd-message-box-container '
 ];
+
 

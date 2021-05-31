@@ -8,7 +8,7 @@ import {
     isElementDisplayed
 } from '../../driver/wdio';
 import {
-    iconsArr, buttonClassArr
+    iconsArr, buttonClassArr, sectionsArr
 } from '../fixtures/appData/message-box'
 
 describe('Message-box test suits', function () {
@@ -24,20 +24,18 @@ describe('Message-box test suits', function () {
     }, 1);
 
     it('Should check working of message-boxes', () => {
-        checkMessageBoxWorking(basedObjectExample);
-        checkMessageBoxWorking(mobileExample);
-        checkMessageBoxWorking(positionExample);
-        checkMessageBoxWorking(basedComponentExample);
-        checkMessageBoxWorking(openTemplateExample);
-        checkMessageBoxWorking(sematicTypesExample);
-        checkMessageBoxWorking(messageBoxExample);
-        checkMessageBoxWorking(complexTemplateExample);
+        for (let i = 0; i < sectionsArr.length; i++) {
+            checkMessageBoxWorking(sectionsArr[i])
+        }
     })
 
     it('Should check status after closing message-box', () => {
-        checkResult(basedObjectExample);
-        checkResult(openTemplateExample);
-        checkResult(basedComponentExample);
+        checkAcceptingMessage(basedObjectExample);
+        checkDismissingMessage(basedObjectExample);
+        checkAcceptingMessage(openTemplateExample);
+        checkDismissingMessage(openTemplateExample);
+        checkAcceptingMessage(basedComponentExample);
+        checkDismissingMessage(basedComponentExample);
     })
 
     it('Should check message & button types', () => {
@@ -45,7 +43,7 @@ describe('Message-box test suits', function () {
         for (let i = 0; i < buttonsLength; i++) {
             expect(getElementClass(sematicTypesExample + button, i)).toContain(buttonClassArr[i], `Element type is not ${buttonClassArr[i]}`)
             click(sematicTypesExample + button, i)
-            i !== buttonsLength - 1 ? expect(getElementClass(messageIcon)).toContain(iconsArr[i], `Icon is not ${iconsArr[i]}`) : expect(doesItExist(messageIcon)).toBe(false, 'Icon exists')
+            i === buttonsLength - 1 ? expect(doesItExist(messageIcon)).toBe(false, 'Icon exists') : expect(getElementClass(messageIcon)).toContain(iconsArr[i], `Icon is not ${iconsArr[i]}`)
             click(okButton)
         }
     })
@@ -54,7 +52,7 @@ describe('Message-box test suits', function () {
         messageBoxPage.checkRtlSwitch();
     });
 
-    describe('visual regression', function() {
+    describe('visual regression', function () {
         it('should check examples visual regression', () => {
             messageBoxPage.saveExampleBaselineScreenshot();
             expect(messageBoxPage.compareWithBaseline()).toBeLessThan(5);
@@ -71,11 +69,13 @@ describe('Message-box test suits', function () {
         }
     }
 
-    function checkResult(section: string): void {
+    function checkAcceptingMessage(section: string): void {
         click(section + button);
         click(okButton);
         section === basedObjectExample ? expect(getText(section + resultTxt)).toContain('Approved', 'Result is not OK') : expect(getText(section + resultTxt)).toContain('Ok', 'Result is not OK')
-        
+
+    }
+    function checkDismissingMessage(section: string): void {
         click(section + button);
         click(cancelButton);
         section === basedObjectExample ? expect(getText(section + resultTxt)).toContain('Canceled', 'Result is not Canceled') : expect(getText(section + resultTxt)).toContain('Cancel', 'Result is not Cancel')

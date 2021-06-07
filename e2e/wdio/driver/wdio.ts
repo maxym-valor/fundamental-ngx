@@ -70,13 +70,10 @@ export function acceptAlert(): void {
     browser.acceptAlert();
 }
 
-<<<<<<< HEAD
 export function isAlertOpen(): boolean {
     return browser.isAlertOpen()
 }
 
-=======
->>>>>>> parent of 7039c2550... split-btn
 export function click(selector: string, index: number = 0, waitTime: number = defaultWaitTime()): void {
     checkSelectorExists(selector, index);
     $$(selector)[index].waitForDisplayed({ timeout: waitTime });

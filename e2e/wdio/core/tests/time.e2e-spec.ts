@@ -6,8 +6,15 @@ import {
     getNextElementText,
     getPreviousElementText,
     getText,
-    pause,
     refreshPage,
+    doesItExist,
+    clickAndMoveElement,
+    getElementClass,
+    getImageTagBrowserPlatform,
+    saveElementScreenshot,
+    scrollIntoView,
+    checkElementScreenshot,
+    getElementArrayLength
 } from '../../driver/wdio';
 import { sections } from '../fixtures/appData/time-contents'
 
@@ -29,7 +36,15 @@ describe('Time component test', function () {
         set11HoursBtn,
         formExample,
         timeItem,
-        enableTimeRow
+        clockArea,
+        enableTimeRow,
+        lowerHour,
+        upperhour,
+        lowerMinute,
+        upperMinute,
+        lowerSec,
+        upperSec,
+        exampleAreaContainersArr
     } = timePage;
 
     beforeAll(() => {
@@ -71,37 +86,96 @@ describe('Time component test', function () {
         const chosenSecondValue = getText(formExample + secondsColumn + timeItem, 35);
         click(formExample + secondsColumn + timeItem, 35);
 
-        expect(getText(enableTimeRow)).toEqual(chosenHourValue + 'h ' + chosenMinuteValue + 'm ' + chosenSecondValue + 's');
+        expect(getText(enableTimeRow)).toEqual(chosenHourValue + 'h ' + chosenMinuteValue + 'm ' + chosenSecondValue + 's', 'Current value is not equal chosen value');
     });
+
+    it('should check that no-spinner example does not have up/down arrows', () => {
+        expect(doesItExist(noSpinnersExample + hoursColumn + UpArrow)).toBe(false, 'Up Arrow exists');
+        expect(doesItExist(noSpinnersExample + hoursColumn + downArrow)).toBe(false, 'Down arrow exists');
+        click(noSpinnersExample + minutesColumn);
+        expect(doesItExist(noSpinnersExample + minutesColumn + UpArrow)).toBe(false, 'Up Arrow exists');
+        expect(doesItExist(noSpinnersExample + minutesColumn + downArrow)).toBe(false, 'Down arrow exists');
+        click(noSpinnersExample + secondsColumn);
+        expect(doesItExist(noSpinnersExample + secondsColumn + UpArrow)).toBe(false, 'Up Arrow exists');
+        expect(doesItExist(noSpinnersExample + secondsColumn + downArrow)).toBe(false, 'Down arrow exists');
+    })
+
+    it('Should check that click and drag works', () => {
+        for (let i = 0; i < sections.length; i++) {
+            checkScroll(sections[i], 'down');
+            refreshPage();
+            checkScroll(sections[i], 'up');
+        }
+    })
 
     it('should check orientation', () => {
         timePage.checkRtlSwitch();
     });
 
-    describe('visual regression', function () {
-        it('should check examples visual regression', () => {
-            timePage.saveExampleBaselineScreenshot();
-            expect(timePage.compareWithBaseline()).toBeLessThan(5);
+    describe('Visual regression', function () {
+        it('should check examples except dinamyc changes example', () => {
+            const actionSheetCount = getElementArrayLength(exampleAreaContainersArr);
+            for (let i = 0; actionSheetCount > i; i++) {
+                if (i !== 3) {
+                    scrollIntoView(exampleAreaContainersArr, i);
+                    saveElementScreenshot(exampleAreaContainersArr,
+                        `time-example-${i}-core-${getImageTagBrowserPlatform()}`, timePage.getScreenshotFolder());
+                    expect(checkElementScreenshot(exampleAreaContainersArr,
+                        `time-example-${i}-core-${getImageTagBrowserPlatform()}`, timePage.getScreenshotFolder()))
+                        .toBeLessThan(5);
+                }
+            }
         });
     });
 
-    function checkClockMoving(section: string, action: string): void {
+    function checkClockMoving(section: string, action: 'arrowClick' | 'buttonClick'): void {
         const nextHourValue = getNextElementText(section + currentHour);
-        action === 'arrowClick' ? click(section + downArrow) : clickNextElement(section + currentHour);
+        action === 'arrowClick' ? click(section + downArrow) : ''
+        action === 'buttonClick' ? clickNextElement(section + currentHour) : ''
         expect(getText(section + currentHour)).toEqual(nextHourValue, 'Current hour is not equal chosen value');
 
         if (section !== onlyHoursExample) {
             click(section + minutesColumn);
             const previousMinuteValue = getPreviousElementText(section + currentMinute);
-            action === 'arrowClick' ? click(section + UpArrow) : clickPreviousElement(section + currentMinute);
+            action === 'arrowClick' ? click(section + UpArrow) : ''
+            action === 'buttonClick' ? clickPreviousElement(section + currentMinute) : ''
             expect(getText(section + currentMinute)).toEqual(previousMinuteValue, 'Current hour is not equal chosen value');
         }
 
         if (section !== withoutSecondsExample && section !== onlyHoursExample) {
             click(section + secondsColumn);
             const previousSecondValue = getPreviousElementText(section + currentSec);
-            action === 'arrowClick' ? click(section + UpArrow) : clickPreviousElement(section + currentSec);
+            action === 'arrowClick' ? click(section + UpArrow) : ''
+            action === 'buttonClick' ? clickPreviousElement(section + currentSec) : ''
             expect(getText(section + currentSec)).toEqual(previousSecondValue, 'Current hour is not equal chosen value');
         }
     }
+
+    function checkScroll(section: string, direction: 'up' | 'down'): void {
+        let scrollStep, scrollToHour, scrollToMinute, scrollToSec;
+
+        direction == 'up' ? getElementClass(section + clockArea) === 'fd-time fd-time--compact' ? scrollStep = 50 : scrollStep = 100 : '';
+        direction == 'down' ? getElementClass(section + clockArea) === 'fd-time fd-time--compact' ? scrollStep = -50 : scrollStep = -100 : '';
+
+        direction === 'up' ? scrollToHour = getText(section + upperhour) : ''
+        direction === 'down' ? scrollToHour = getText(section + lowerHour) : ''
+        clickAndMoveElement(section + hoursColumn, 0, scrollStep);
+        expect(getText(section + currentHour)).toEqual(scrollToHour, 'The current hour is not equivalent to the hour to which you have scrolled');
+
+        if (section !== onlyHoursExample) {
+            click(section + minutesColumn);
+            direction === 'up' ? scrollToMinute = getText(section + upperMinute) : '';
+            direction === 'down' ? scrollToMinute = getText(section + lowerMinute) : ''
+            clickAndMoveElement(section + minutesColumn, 0, scrollStep);
+            expect(getText(section + currentMinute)).toEqual(scrollToMinute, 'The current hour is not equivalent to the hour to which you have scrolled');
+        }
+        if (section !== withoutSecondsExample && section !== onlyHoursExample) {
+            click(section + secondsColumn);
+            direction === 'up' ? scrollToSec = getText(section + upperSec) : ''
+            direction === 'down' ? scrollToSec = getText(section + lowerSec) : ''
+            clickAndMoveElement(section + secondsColumn, 0, scrollStep);
+            expect(getText(section + currentSec)).toEqual(scrollToSec, 'The current hour is not equivalent to the hour to which you have scrolled');
+        }
+    }
+
 });

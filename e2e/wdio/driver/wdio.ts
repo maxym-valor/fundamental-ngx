@@ -70,6 +70,9 @@ export function acceptAlert(): void {
     browser.acceptAlert();
 }
 
+export function isAlertOpen(): boolean {
+    return browser.isAlertOpen();
+  
 export function isAlertOpen(): boolean{
     return browser.isAlertOpen()
 }

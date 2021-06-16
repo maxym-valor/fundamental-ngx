@@ -1,6 +1,7 @@
 import {
     browserIsFirefox,
     click,
+    currentPlatformName,
     doubleClick,
     getAttributeByName,
     getElementArrayLength,
@@ -65,6 +66,9 @@ describe('Tabs test suite', () => {
     });
 
     it('Check choosing tabs via buttons', () => {
+        if(browserIsFirefox() && currentPlatformName() === 'macOS') {
+            return;
+        }
         click(chooseTabsBtn, 1)
         expect(getAttributeByName(SelectionExample + fdTab, 'aria-selected', 1)).toEqual('true')
         click(chooseTabsBtn)
@@ -73,6 +77,9 @@ describe('Tabs test suite', () => {
     });
 
     it('check collapsible overflow', () => {
+        if(browserIsFirefox() && currentPlatformName() === 'macOS') {
+            return;
+        }
         scrollIntoView(collapsibleOverflowExample)
         const length = getElementArrayLength(collapsibleOverflowExample + collapsibleTab);
         const lastPointOfMainList = getText(collapsibleOverflowExample + collapsibleTab, length - 1);
@@ -89,21 +96,12 @@ describe('Tabs test suite', () => {
         expect(getAttributeByName(tabPanel, 'aria-expanded', 2)).toEqual('true');
     });
 
-    xdescribe('Tabs constructor testing', () => {
-
         it('Check that tabs change according to chosen filter and compact modes', () => {
-            const myTittle = 'my custom title';
-            const myCount = 'my count';
-            const myContent = 'my content';
             click(modeSelect)
             click(filterMode)
             click(compactCheckBox)
             expect(getAttributeByName(threeElementsRow, 'ng-reflect-compact')).toEqual('true')
             expect(getElementClass('playground .fd-tabs')).toContain('fd-tabs--filter')
-            setValue(titleField, myTittle); setValue(counterField, myCount); setValue(counterField, myContent);
-            expect(getText(titleAndCountSection)).toContain(myTittle)
-            expect(getText(titleAndCountSection)).toContain(myCount)
-            expect(getText(contentSection)).toEqual(myContent)
         });
 
         it('check that icon changes according to chosen', () => {
@@ -115,9 +113,9 @@ describe('Tabs test suite', () => {
             expect(getElementClass(fdIcon)).toContain('sap-icon--accelerated')
         });
 
-    });
+    
 
-    xit('should check examples visual regression', () => {
+    it('should check examples visual regression', () => {
         tabsPage.saveExampleBaselineScreenshot();
         expect(tabsPage.compareWithBaseline()).toBeLessThan(5);
     });

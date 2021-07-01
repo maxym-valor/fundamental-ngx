@@ -4,26 +4,22 @@ import {
     getElementArrayLength,
     click,
     getValue,
-    doubleClick,
-    pause,
     getText,
-    clearValue,
     setValue,
     getElementClass,
     sendKeys,
-    isElementDisplayed
+    doubleClick,
+    isElementClickable
 } from '../../driver/wdio';
 import { sections } from '../fixtures/appData/step-input-content'
 
-describe('Time component test', function () {
+describe('Step input component test suit', function () {
     const stepInputPage = new StepInputPo();
     const {
         formExample,
-        labelExample,
         localExample,
         stateExample,
         configExample,
-        defaultExample,
         currencyExample,
         step,
         input,
@@ -43,34 +39,54 @@ describe('Time component test', function () {
 
     it('should check default example inputs', () => {
         for (let i = 0; i < sections.length; i++) {
-            checkInputWorking(sections[i], 'click', 'positive')
-            checkInputWorking(sections[i], 'click', 'negative')
-            checkInputWorking(sections[i], 'type', 'negative')
-            checkInputWorking(sections[i], 'type', 'positive')
+            checkTypingValueInInput(sections[i], '-');
+            checkTypingValueInInput(sections[i], '+');
         }
     })
 
-    it('should check limitation for step-input', () => {
+    it('should check increase/dicrease value by plus-minus buttons', () => {
+        for (let i = 0; i < sections.length; i++) {
+            checkIncDicValueByBtn(sections[i], '+');
+            checkIncDicValueByBtn(sections[i], '-');
+        }
+    })
+
+    it('should check that minimum - maximum value for step input is from -10 to 10', () => {
 
         setValue(configExample + input, '10', 5);
-        expect(getElementClass(configExample + plusButton, 5)).toContain('is-disabled')
+        sendKeys('Enter');
+        expect(getElementClass(configExample + plusButton, 5)).toContain('is-disabled', 'button is not disabled');
         setValue(configExample + input, '-10', 5);
-        expect(getElementClass(configExample + minusButton, 5)).toContain('is-disabled')
+        sendKeys('Enter');
+        expect(getElementClass(configExample + minusButton, 5)).toContain('is-disabled', 'button is not disabled');
+
+    })
+
+    it('should check data entry more than minimum and maximum', () => {
+        setValue(configExample + input, '20', 5);
+        sendKeys('Enter');
+        expect(getValue(configExample + input, 5)).toEqual('10')
+        expect(getElementClass(configExample + plusButton, 5)).toContain('is-disabled', 'button is not disabled');
+
+        setValue(configExample + input, '-20', 5);
+        sendKeys('Enter');
+        expect(getValue(configExample + input, 5)).toEqual('-10')
+        expect(getElementClass(configExample + minusButton, 5)).toContain('is-disabled', 'button is not disabled');
 
     })
 
     it('should verify that in specific input step is 0.5', () => {
         setValue(configExample + plusButton, '0', 6);
-        for (let i = 0; i < 6; i++) {
-            click(configExample + plusButton, 6)
-        }
-        expect(parseFloat(getValue(configExample + input, 6)) / 6).toEqual(0.5)
+        click(configExample + plusButton, 6);
+        expect(parseFloat(getValue(configExample + input, 6))).toEqual(0.5);
+        doubleClick(configExample + minusButton, 6);
+        expect(parseFloat(getValue(configExample + input, 6))).toEqual(-0.5);
     })
 
     it('should check Saudi Arabia locale', () => {
         setValue(localExample + input, '5', 2);
-        sendKeys('Enter')
-        expect(getValue(localExample + input, 2)).toEqual('٥')
+        sendKeys('Enter');
+        expect(getValue(localExample + input, 2)).toEqual('٥');
     })
 
     it('should check input status for Input States example', () => {
@@ -82,19 +98,16 @@ describe('Time component test', function () {
 
     it('should check entering invalid values in inputs', () => {
         for (let i = 0; i < sections.length; i++) {
-            checkInputWithInvalidValues(sections[i])
+            checkInputWithInvalidValues(sections[i]);
         }
     })
 
     it('should check disabled inputs', () => {
-        const defaultValue = getValue(formExample + input, 2);
-        expect(getElementClass(formExample + step, 2)).toContain('is-disabled'); 
-        click(formExample + plusButton, 2);
-        expect(getValue(formExample + input, 2)).toEqual(defaultValue);
+        expect(getElementClass(formExample + step, 2)).toContain('is-disabled', 'input is not disabled');
+        expect(isElementClickable(formExample + plusButton, 2)).toBe(false, 'element is clickable')
+        expect(isElementClickable(formExample + minusButton, 2)).toBe(false, 'element is clickable')
 
-        expect(getElementClass(formExample + step, 3)).toContain('is-readonly'); 
-        expect(isElementDisplayed(formExample + plusButton, 3)).toBe(false);
-        expect(isElementDisplayed(formExample + minusButton, 3)).toBe(false);
+        expect(getElementClass(formExample + step, 3)).toContain('is-readonly', 'input is not read-only');
     })
 
     it('should check RTL orientation', () => {
@@ -106,53 +119,65 @@ describe('Time component test', function () {
         expect(stepInputPage.compareWithBaseline()).toBeLessThan(5);
     })
 
-    function checkInputWithInvalidValues(section: string) {
+    function checkInputWithInvalidValues(section: string): void {
         let inputLength = getElementArrayLength(section + input);
         let defaultValue;
-        section == formExample || section == localExample ? inputLength = 2 : ''
+        section === formExample || section === localExample ? inputLength = 2 : ''
         for (let i = 0; i < inputLength; i++) {
-            defaultValue = getValue(section + input, i)
-            setValue(section + input, 'asd123', i)
-            sendKeys('Enter')
-            expect(getValue(section + input, i)).toEqual(defaultValue)
+            defaultValue = getValue(section + input, i);
+            setValue(section + input, 'asd123', i);
+            sendKeys('Enter');
+            expect(getValue(section + input, i)).toEqual(defaultValue);
         }
     }
 
-    function checkInputWorking(section: string, way: 'click' | 'type', sign: 'positive' | 'negative') {
+    function checkIncDicValueByBtn(section: string, sign: '+' | '-'): void {
+        refreshPage();
         let inputLength = getElementArrayLength(section + input);
         section === formExample || section === localExample ? inputLength = 2 : ''
-        let plusValue = 5;
-        let minusValue = -5;
-        let steps = 5;
+        let defaultValue;
+
+        for (let i = 0; i < inputLength; i++) {
+            defaultValue = parseFloat(getValue(section + input, i));
+            if (sign === '+') {
+                click(section + plusButton, i);
+                expect(parseFloat(getValue(section + input, i))).toBeGreaterThan(defaultValue);
+            }
+            if (sign === '-') {
+                click(section + minusButton, i);
+                expect(parseFloat(getValue(section + input, i))).toBeLessThan(defaultValue);
+            }
+        }
+
+    }
+
+    function checkTypingValueInInput(section: string, sign: '+' | '-'): void {
+        let inputLength = getElementArrayLength(section + input);
+        section === formExample || section === localExample ? inputLength = 2 : ''
+        const plusValue = '5';
+        const minusValue = '-5';
         let additionalText;
-        let expectedValue
+        let expectedValue;
         for (let i = 0; i < inputLength; i++) {
             additionalText = '';
-            setValue(section + input, '0', i)
-            if (way === 'click') {
-                for (let j = 0; j < steps; j++) {
-                    sign === 'positive' ? click(section + plusButton, i) : click(section + minusButton, i);
-                }
-            }
-            if (way === 'type') {
-                sign === 'positive' ? setValue(section + input, plusValue.toString(), i) : setValue(section + input, minusValue.toString(), i)
-                sendKeys('Enter')
-            }
+            setValue(section + input, '0', i);
+
+            sign === '+' ? setValue(section + input, plusValue.toString(), i) : setValue(section + input, minusValue, i);
+            sendKeys('Enter');
 
             section === configExample && i === 0 ? additionalText = '.0000' : '';
             section === currencyExample && i === 0 || section == currencyExample && i === 2 ? additionalText = '.00' : '';
 
-            sign === 'positive' ? section === configExample && i === 6 && way === 'click' ? expectedValue = plusValue / 2 : expectedValue = plusValue : ''
-            sign === 'negative' ? section === configExample && i === 6 && way === 'click' ? expectedValue = minusValue / 2 : expectedValue = minusValue : ''
+            sign === '+' ? expectedValue = plusValue : ''
+            sign === '-' ? expectedValue = minusValue : ''
 
-            expect(getValue(section + input, i)).toEqual(expectedValue.toString() + additionalText);
-            section !== formExample ? expect(getText(section + text, i)).toEqual(`Value: ${expectedValue.toString()}`) : ''
+            expect(getValue(section + input, i)).toEqual(expectedValue + additionalText);
+            section !== formExample ? expect(getText(section + text, i)).toEqual(`Value: ${expectedValue}`) : ''
 
             if (section === formExample) {
-                i === 0 ? expect(getText(textForDisabledExample)).toEqual(`${expectedValue.toString()}`) : ''
-                i === 1 ? expect(getText(section + text)).toEqual(`Value: ${expectedValue.toString()}`) : ''
+                i === 0 ? expect(getText(textForDisabledExample)).toEqual(expectedValue) : ''
+                i === 1 ? expect(getText(section + text)).toEqual(`Value: ${expectedValue}`) : ''
             }
-
         }
     }
 

@@ -16,6 +16,12 @@ import { customMessage, customWidth } from '../fixtures/testData/message-strip.t
 import { MessageStripPo } from '../pages/message-strip.po';
 
 describe('Message-strip test suite', function () {
+
+import { sections, messageTypes, playgroundStates } from '../fixtures/appData/message-strip.contents';
+import { customMessage, customWidth } from '../fixtures/testData/message-strip';
+import { MessageStripPo } from '../pages/message-strip.po';
+
+describe('Message-strip test suite', function() {
     const messageStripPage = new MessageStripPo();
     const {
         noIconExample,
@@ -28,6 +34,11 @@ describe('Message-strip test suite', function () {
         widthInput,
         messageInput,
         select,
+        dismissibleCheckbox,
+        noIconCheckbox,
+        widthInput,
+        messageInput,
+        typeSelectionField,
         messageStripPG,
         messageStripMessage,
         resetButton,
@@ -41,6 +52,7 @@ describe('Message-strip test suite', function () {
     beforeEach(() => {
         refreshPage();
         waitForElDisplayed(messageStripPage.title)
+        waitForElDisplayed(messageStripPage.title);
     }, 1);
 
 
@@ -85,11 +97,13 @@ describe('Message-strip test suite', function () {
         it('should check choosing states of message-strip', () => {
             for (let i = 0; i < playgroundStates.length; i++) {
                 click(select);
+                click(typeSelectionField);
                 click(stateOption, i);
                 expect(getElementClass(messageStripPG)).toContain(playgroundStates[i]);
             }
             click(resetButton);
             expect(getElementClass(messageStripPG)).toContain(playgroundStates[0])
+            expect(getElementClass(messageStripPG)).toContain(playgroundStates[0]);
         });
 
         it('should check changing message in message-strip', () => {
@@ -110,6 +124,11 @@ describe('Message-strip test suite', function () {
 
         it('should check working dissmisible mode', () => {
             click(dissmissibleCheckbox);
+            expect(getValue(widthInput)).toEqual(defaultWidth);
+        });
+
+        it('should check working dismissible mode', () => {
+            click(dismissibleCheckbox);
             // checkbox is enabled by default
             expect(getElementClass(messageStripPG)).not.toContain('dismissible');
             click(resetButton);
@@ -122,7 +141,8 @@ describe('Message-strip test suite', function () {
             click(resetButton);
             expect(getElementClass(messageStripPG)).not.toContain('no-icon');
         })
-
+      
+        });
     });
 
     function checkDismissingMessage(section: string): void {
@@ -136,6 +156,7 @@ describe('Message-strip test suite', function () {
             }
         }
     };
+    }
 
     function checkMessageStatus(section: string): void {
         const messageLength = getElementArrayLength(section + messageStrip);
@@ -149,6 +170,11 @@ describe('Message-strip test suite', function () {
             expect(getElementClass(section + messageStrip, i)).toContain(messageTypes[i])
         }
     };
-
-
+                 expect(getElementClass(section + messageStrip, i)).not.toContain(messageTypes[j]);
+                }
+                continue;
+            }
+            expect(getElementClass(section + messageStrip, i)).toContain(messageTypes[i]);
+        }
+    }
 });

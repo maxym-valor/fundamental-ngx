@@ -99,16 +99,16 @@ exports.config = {
                 args: ['--window-size=1920,1417', '--headless']
             },
         },
-        // {
-        //     browserName: 'firefox',
-        //     platformName: 'macOS 10.15',
-        //     browserVersion: 'latest',
-        //     acceptInsecureCerts: true,
-        //     'sauce:options': {
-        //         screenResolution: '1920x1440',
-        //         name: 'e2e-MAC-firefox ' + process.env.TRAVIS_BUILD_ID + ' ' + process.env.TRAVIS_PULL_REQUEST_BRANCH,
-        //     }
-        // },
+        {
+            browserName: 'firefox',
+            platformName: 'macOS 10.15',
+            browserVersion: 'latest',
+            acceptInsecureCerts: true,
+            'sauce:options': {
+                screenResolution: '1920x1440',
+                name: 'e2e-MAC-firefox ' + process.env.TRAVIS_BUILD_ID + ' ' + process.env.TRAVIS_PULL_REQUEST_BRANCH,
+            }
+        },
         // {
         //     browserName: 'MicrosoftEdge',
         //     platformName: 'macOS 10.15',

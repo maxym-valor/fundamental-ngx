@@ -1,4 +1,62 @@
 
+## [0.31.0-rc.159](https://github.com/SAP/fundamental-ngx/compare/v0.31.0-rc.158...v0.31.0-rc.159) (2021-08-02)
+
+
+### Bug Fixes
+
+* **platform:** fix search component keyboard accessibility and screen reader issues ([#5673](https://github.com/SAP/fundamental-ngx/issues/5673)) ([e93a3ff](https://github.com/SAP/fundamental-ngx/commit/e93a3fff2dc3091b6b1e80d5a60b29b092e0db09))
+
+## [0.31.0-rc.158](https://github.com/SAP/fundamental-ngx/compare/v0.31.0-rc.157...v0.31.0-rc.158) (2021-07-31)
+
+
+### Bug Fixes
+
+* **platform:** add attribute option into combobox ([#5772](https://github.com/SAP/fundamental-ngx/issues/5772)) ([ae5c191](https://github.com/SAP/fundamental-ngx/commit/ae5c191b13608d4fae4b045a9f9a2dfb5fff3e6c))
+
+## [0.31.0-rc.157](https://github.com/SAP/fundamental-ngx/compare/v0.31.0-rc.156...v0.31.0-rc.157) (2021-07-30)
+
+## [0.31.0-rc.156](https://github.com/SAP/fundamental-ngx/compare/v0.31.0-rc.155...v0.31.0-rc.156) (2021-07-30)
+
+
+### Features
+
+* **core:** moment date time adapter implementation ([#6000](https://github.com/SAP/fundamental-ngx/issues/6000)) ([94e7b35](https://github.com/SAP/fundamental-ngx/commit/94e7b359d9968f66f6bda7953cab7f1f4fc14331))
+
+## [0.31.0-rc.155](https://github.com/SAP/fundamental-ngx/compare/v0.31.0-rc.154...v0.31.0-rc.155) (2021-07-30)
+
+
+### Bug Fixes
+
+* **core:** fix extra onChange event in the TimePicker component ([#6079](https://github.com/SAP/fundamental-ngx/issues/6079)) ([d6efa43](https://github.com/SAP/fundamental-ngx/commit/d6efa435b9714fac9767e9995a3a9bfeda5da254))
+
+## [0.31.0-rc.154](https://github.com/SAP/fundamental-ngx/compare/v0.31.0-rc.153...v0.31.0-rc.154) (2021-07-30)
+
+
+### Bug Fixes
+
+* **platform:** combobox in mobile mode ([#6115](https://github.com/SAP/fundamental-ngx/issues/6115)) ([7e35917](https://github.com/SAP/fundamental-ngx/commit/7e35917a6bb1a21b1bb96fc5de6c9981001dd41d))
+
+## [0.31.0-rc.153](https://github.com/SAP/fundamental-ngx/compare/v0.31.0-rc.152...v0.31.0-rc.153) (2021-07-30)
+
+
+### Bug Fixes
+
+* **platform:** grouping & frozen columns table layout fix ([#6043](https://github.com/SAP/fundamental-ngx/issues/6043)) ([e30a19b](https://github.com/SAP/fundamental-ngx/commit/e30a19b32dd60815f8593b0ad0b369fb8106fdde))
+
+## [0.31.0-rc.152](https://github.com/SAP/fundamental-ngx/compare/v0.31.0-rc.151...v0.31.0-rc.152) (2021-07-27)
+
+
+### Features
+
+* **core:** dialog auto labelling ([#6053](https://github.com/SAP/fundamental-ngx/issues/6053)) ([8cb3613](https://github.com/SAP/fundamental-ngx/commit/8cb36132aeab49380a58f4a7c2be57a9a651ea77))
+
+## [0.31.0-rc.151](https://github.com/SAP/fundamental-ngx/compare/v0.31.0-rc.150...v0.31.0-rc.151) (2021-07-27)
+
+
+### Bug Fixes
+
+* **core,platform:** fix weird selection behaviour because of using attr.name in radio button ([#6056](https://github.com/SAP/fundamental-ngx/issues/6056)) ([e67ea49](https://github.com/SAP/fundamental-ngx/commit/e67ea49c8647ec75e91c6effa641b4835bd8a109))
+
 ## [0.31.0-rc.150](https://github.com/SAP/fundamental-ngx/compare/v0.31.0-rc.149...v0.31.0-rc.150) (2021-07-26)
 
 ## [0.31.0-rc.149](https://github.com/SAP/fundamental-ngx/compare/v0.31.0-rc.148...v0.31.0-rc.149) (2021-07-26)

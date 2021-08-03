@@ -1,4 +1,15 @@
 
+## [0.31.0-rc.164](https://github.com/SAP/fundamental-ngx/compare/v0.31.0-rc.163...v0.31.0-rc.164) (2021-08-02)
+
+## [0.31.0-rc.163](https://github.com/SAP/fundamental-ngx/compare/v0.31.0-rc.162...v0.31.0-rc.163) (2021-08-02)
+
+
+### Bug Fixes
+
+* **core:** dialog inner focus trap ([#6114](https://github.com/SAP/fundamental-ngx/issues/6114)) ([68d541e](https://github.com/SAP/fundamental-ngx/commit/68d541e56b787a886d2334d23a643cd7ea646916))
+
+## [0.31.0-rc.162](https://github.com/SAP/fundamental-ngx/compare/v0.31.0-rc.161...v0.31.0-rc.162) (2021-08-02)
+
 ## [0.31.0-rc.161](https://github.com/SAP/fundamental-ngx/compare/v0.31.0-rc.160...v0.31.0-rc.161) (2021-08-02)
 
 ## [0.31.0-rc.160](https://github.com/SAP/fundamental-ngx/compare/v0.31.0-rc.159...v0.31.0-rc.160) (2021-08-02)

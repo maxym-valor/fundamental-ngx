@@ -1,4 +1,18 @@
 
+## [0.31.0-rc.166](https://github.com/SAP/fundamental-ngx/compare/v0.31.0-rc.165...v0.31.0-rc.166) (2021-08-03)
+
+
+### Bug Fixes
+
+* **platform:** remove unused title from examples ([#6191](https://github.com/SAP/fundamental-ngx/issues/6191)) ([1e65522](https://github.com/SAP/fundamental-ngx/commit/1e65522b272792e01f2a55ffeba57aaaede9b889))
+
+## [0.31.0-rc.165](https://github.com/SAP/fundamental-ngx/compare/v0.31.0-rc.164...v0.31.0-rc.165) (2021-08-03)
+
+
+### Bug Fixes
+
+* **core:** import menuMobileModule into fundamental-ngx/core module ([#6128](https://github.com/SAP/fundamental-ngx/issues/6128)) ([02a0ede](https://github.com/SAP/fundamental-ngx/commit/02a0edea6745d086b65f99295014acaec92a2af9))
+
 ## [0.31.0-rc.164](https://github.com/SAP/fundamental-ngx/compare/v0.31.0-rc.163...v0.31.0-rc.164) (2021-08-02)
 
 ## [0.31.0-rc.163](https://github.com/SAP/fundamental-ngx/compare/v0.31.0-rc.162...v0.31.0-rc.163) (2021-08-02)

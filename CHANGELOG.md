@@ -1,4 +1,32 @@
 
+## [0.31.0-rc.178](https://github.com/SAP/fundamental-ngx/compare/v0.31.0-rc.177...v0.31.0-rc.178) (2021-08-06)
+
+
+### Bug Fixes
+
+* **core:** extended example, label for the busy indicator ([#6061](https://github.com/SAP/fundamental-ngx/issues/6061)) ([792e468](https://github.com/SAP/fundamental-ngx/commit/792e46804cbe842b341aec23c799a3b74ea8919e))
+
+## [0.31.0-rc.177](https://github.com/SAP/fundamental-ngx/compare/v0.31.0-rc.176...v0.31.0-rc.177) (2021-08-06)
+
+
+### Bug Fixes
+
+* **core:** add listener to submenu item changes ([#6241](https://github.com/SAP/fundamental-ngx/issues/6241)) ([b594cc9](https://github.com/SAP/fundamental-ngx/commit/b594cc9aa485791b406e86148e5758059816ad74))
+
+## [0.31.0-rc.176](https://github.com/SAP/fundamental-ngx/compare/v0.31.0-rc.175...v0.31.0-rc.176) (2021-08-05)
+
+
+### Features
+
+* **core:** add a fallback mechanism for avatar ([#6122](https://github.com/SAP/fundamental-ngx/issues/6122)) ([0b3d389](https://github.com/SAP/fundamental-ngx/commit/0b3d3893040ede61dc60bd50536fe917f778404b))
+
+## [0.31.0-rc.175](https://github.com/SAP/fundamental-ngx/compare/v0.31.0-rc.174...v0.31.0-rc.175) (2021-08-05)
+
+
+### Bug Fixes
+
+* **core:** delete focus from reset options in Select component ([#6242](https://github.com/SAP/fundamental-ngx/issues/6242)) ([e8a672c](https://github.com/SAP/fundamental-ngx/commit/e8a672c93977897a6cb3e8fcd1b6897e7ce7b8f1))
+
 ## [0.31.0-rc.174](https://github.com/SAP/fundamental-ngx/compare/v0.31.0-rc.173...v0.31.0-rc.174) (2021-08-05)
 
 

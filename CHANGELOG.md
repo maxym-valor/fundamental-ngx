@@ -1,4 +1,65 @@
 
+### [0.32.1-rc.13](https://github.com/SAP/fundamental-ngx/compare/v0.32.1-rc.12...v0.32.1-rc.13) (2021-09-08)
+
+
+### Bug Fixes
+
+* **platform:** combobox tab order in safari ([#6386](https://github.com/SAP/fundamental-ngx/issues/6386)) ([b7e2216](https://github.com/SAP/fundamental-ngx/commit/b7e2216382276c07261e44d54dce71f62ca75720))
+
+### [0.32.1-rc.12](https://github.com/SAP/fundamental-ngx/compare/v0.32.1-rc.11...v0.32.1-rc.12) (2021-09-08)
+
+
+### Bug Fixes
+
+* **core:** tabs, fix collapseOverflow for icon only mode ([#6356](https://github.com/SAP/fundamental-ngx/issues/6356)) ([de6540f](https://github.com/SAP/fundamental-ngx/commit/de6540f44ac281f28b2532827210e3fc0cd32c04))
+
+### [0.32.1-rc.11](https://github.com/SAP/fundamental-ngx/compare/v0.32.1-rc.10...v0.32.1-rc.11) (2021-09-07)
+
+
+### Bug Fixes
+
+* **core:** dnd prevent focus applying after dropping item ([#6429](https://github.com/SAP/fundamental-ngx/issues/6429)) ([72ccb83](https://github.com/SAP/fundamental-ngx/commit/72ccb83edc324b291224f01d18895f287c93db01))
+
+### [0.32.1-rc.10](https://github.com/SAP/fundamental-ngx/compare/v0.32.1-rc.9...v0.32.1-rc.10) (2021-09-07)
+
+
+### Bug Fixes
+
+* **platform:** fix fdp-menu-item extra spaces ([#6424](https://github.com/SAP/fundamental-ngx/issues/6424)) ([08b0c1a](https://github.com/SAP/fundamental-ngx/commit/08b0c1aeca95a7c92c9e8a74226bbff957498c5c))
+
+### [0.32.1-rc.9](https://github.com/SAP/fundamental-ngx/compare/v0.32.1-rc.8...v0.32.1-rc.9) (2021-09-07)
+
+### [0.32.1-rc.8](https://github.com/SAP/fundamental-ngx/compare/v0.32.1-rc.7...v0.32.1-rc.8) (2021-09-07)
+
+
+### Bug Fixes
+
+* **core:** message-box, fix rtl mode ([#6437](https://github.com/SAP/fundamental-ngx/issues/6437)) ([145d14b](https://github.com/SAP/fundamental-ngx/commit/145d14b3a211ea2d9602e1883cbfcfe3daefa9b3))
+
+### [0.32.1-rc.7](https://github.com/SAP/fundamental-ngx/compare/v0.32.1-rc.6...v0.32.1-rc.7) (2021-09-07)
+
+### [0.32.1-rc.6](https://github.com/SAP/fundamental-ngx/compare/v0.32.1-rc.5...v0.32.1-rc.6) (2021-09-06)
+
+### [0.32.1-rc.5](https://github.com/SAP/fundamental-ngx/compare/v0.32.1-rc.4...v0.32.1-rc.5) (2021-09-06)
+
+
+### Bug Fixes
+
+* **platform, core:** fix a11y issue for object status component ([#6388](https://github.com/SAP/fundamental-ngx/issues/6388)) ([4271b1f](https://github.com/SAP/fundamental-ngx/commit/4271b1f5994b0708b1d9f78aab0c464b65e4ec1f))
+
+### [0.32.1-rc.4](https://github.com/SAP/fundamental-ngx/compare/v0.32.1-rc.3...v0.32.1-rc.4) (2021-09-06)
+
+### [0.32.1-rc.3](https://github.com/SAP/fundamental-ngx/compare/v0.32.1-rc.2...v0.32.1-rc.3) (2021-09-06)
+
+### [0.32.1-rc.2](https://github.com/SAP/fundamental-ngx/compare/v0.32.1-rc.1...v0.32.1-rc.2) (2021-09-06)
+
+### [0.32.1-rc.1](https://github.com/SAP/fundamental-ngx/compare/v0.32.1-rc.0...v0.32.1-rc.1) (2021-09-06)
+
+
+### Bug Fixes
+
+* **core,platform:** fix a11y for Upload Collection ([#6118](https://github.com/SAP/fundamental-ngx/issues/6118)) ([3e9241f](https://github.com/SAP/fundamental-ngx/commit/3e9241fa7a8c5fb096d0a33bd6775c5f846ce73a))
+
 ### [0.32.1-rc.0](https://github.com/SAP/fundamental-ngx/compare/v0.32.0...v0.32.1-rc.0) (2021-09-06)
 
 

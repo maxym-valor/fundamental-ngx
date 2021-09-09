@@ -1,6 +1,6 @@
 import {
     click,
-    getElementArrayLength, 
+    getElementArrayLength,
     getElementClass,
     getText,
     refreshPage,
@@ -16,14 +16,17 @@ import {
 import {
     requiredErrorMessage, termsErrorMesssage, frameworkErrorMessage,
     birthdayYearErrorMessage, passwordConditionsErrorMessage
-} from '../fixtures/testData/form-generator'
+} from '../fixtures/appData/form-generator-contents';
+import {
+    incorrectBirthdayYear, correctBirthdayYear, correctPassword, simplePassword
+} from '../fixtures/testData/form-generator';
 import { FormGeneratorPo } from '../pages/form-generator.po';
 
 describe('Form generator test suite', function () {
     const formGeneratorPage = new FormGeneratorPo();
     const {
         errorExample, customExample, defaultExample, observableExample, fieldLayoutExample, programmaticExample,
-        nameInput, passwordInput, ageInput, dateInput, radioButton, checkbox, submitButton, mainSpecialitySelect, 
+        nameInput, passwordInput, ageInput, dateInput, radioButton, checkbox, submitButton, mainSpecialitySelect,
         calendarInputGroup, errorMessage, radioButtonLabel, sliderPoint, formValue, validationInput
     } = formGeneratorPage;
 
@@ -36,39 +39,94 @@ describe('Form generator test suite', function () {
         waitForElDisplayed(formGeneratorPage.title);
     }, 1);
 
-    it('should check validation for required fields', () => {
-        checkGeneralValidation(fieldLayoutExample);
-        checkGeneralValidation(defaultExample);
-        checkGeneralValidation(observableExample);
-        checkGeneralValidation(programmaticExample);
+    describe('Tests for default example', () => {
+        it('should check required fields validation', () => {
+            checkFormValidation(defaultExample);
+        });
+
+        it('should check framework error messages', () => {
+            checkFrameworkValidation(defaultExample);
+        });
+
+        it('should check permissions error', () => {
+            checkPermissionsValidation(defaultExample);
+        });
+
+        it('should check birtday year validation', () => {
+            checkBirthdayValidation(defaultExample);
+        });
+
+        it('should check password validation', () => {
+            checkPasswordValidation(defaultExample);
+        });
     });
 
-    it('should check framework error messages', () => {
-        checkFrameworkValidation(defaultExample);
-        checkFrameworkValidation(observableExample);
-        checkFrameworkValidation(programmaticExample);
-        checkFrameworkValidation(fieldLayoutExample);
+    describe('Tests for field layout example', () => {
+        it('should check required fields validation', () => {
+            checkFormValidation(fieldLayoutExample);
+        });
+
+        it('should check framework error messages', () => {
+            checkFrameworkValidation(fieldLayoutExample);
+        });
+
+        it('should check permissions error', () => {
+            checkPermissionsValidation(fieldLayoutExample);
+        });
+
+        it('should check birtday year error message', () => {
+            checkBirthdayValidation(fieldLayoutExample);
+        });
+
+        it('should check password validation', () => {
+            checkPasswordValidation(fieldLayoutExample);
+        });
     });
 
-    it('should check permissions error', () => {
-        checkPermissionsValidation(defaultExample);
-        checkPermissionsValidation(observableExample);
-        checkPermissionsValidation(programmaticExample);
-        checkPermissionsValidation(fieldLayoutExample);
+    describe('Tests for observable example', () => {
+        it('should check required fields validation', () => {
+            checkFormValidation(observableExample);
+        });
+
+        it('should check framework error messages', () => {
+            checkFrameworkValidation(observableExample);
+        });
+
+        it('should check permissions error', () => {
+            checkPermissionsValidation(observableExample);
+        });
+
+        it('should check birtday year error message', () => {
+            checkBirthdayValidation(observableExample);
+        });
+
+        it('should check password validation', () => {
+            checkPasswordValidation(observableExample);
+        });
     });
 
-    it('should check birtday year error message', () => {
-        checkBirthdayValidation(defaultExample);
-        checkBirthdayValidation(observableExample);
-        checkBirthdayValidation(programmaticExample);
-        checkBirthdayValidation(fieldLayoutExample);
-    })
+    describe('Tests for programmatic example', () => {
 
-    it('should check password validation', () => {
-        checkPasswordValidation(defaultExample);
-        checkPasswordValidation(observableExample);
-        checkPasswordValidation(programmaticExample);
-        checkPasswordValidation(fieldLayoutExample);
+        it('should check validation for required fields', () => {
+            checkFormValidation(programmaticExample);
+        });
+
+        it('should check framework error messages', () => {
+            checkFrameworkValidation(programmaticExample);
+        });
+
+        it('should check permissions error', () => {
+            checkPermissionsValidation(programmaticExample);
+        });
+
+        it('should check birtday year error message', () => {
+            checkBirthdayValidation(programmaticExample);
+        })
+
+        it('should check password validation', () => {
+            checkPasswordValidation(programmaticExample);
+        });
+
     });
 
     it('should check custom controls example', () => {
@@ -77,52 +135,52 @@ describe('Form generator test suite', function () {
         expect(doesItExist(formValue)).toBe(false, 'form value row exists');
         click(customExample + submitButton);
         expect(getText(formValue)).toEqual('Form value: { "some_slider": { "value": 20, "label": "Twenty" } }');
-    })
+    });
 
     it('should check custom error example', () => {
         click(errorExample + submitButton);
-        checkSpecificValidation(errorExample, validationInput, requiredErrorMessage);
-        checkSpecificValidation(errorExample, validationInput, requiredErrorMessage, 1);
+        checkValidationMessage(errorExample, validationInput, requiredErrorMessage);
+        checkValidationMessage(errorExample, validationInput, requiredErrorMessage, 1);
         setValue(errorExample + validationInput, '1');
         setValue(errorExample + validationInput, '1', 1);
         expect(doesItExist(errorMessage)).toBe(false, 'error message still visible');
-    })
+    });
 
     it('should check RTL', () => {
         formGeneratorPage.checkRtlSwitch();
     });
 
     function checkPasswordValidation(section: string): void {
-        setValue(section + passwordInput, '123');
-        checkSpecificValidation(section, passwordInput, passwordConditionsErrorMessage);
-        setValue(section + passwordInput, 'FundamentalNgx12#');
+        setValue(section + passwordInput, simplePassword);
+        checkValidationMessage(section, passwordInput, passwordConditionsErrorMessage);
+        setValue(section + passwordInput, correctPassword);
         expect(doesItExist(errorMessage)).toBe(false, 'error message exists');
     }
 
     function checkBirthdayValidation(section: string): void {
         scrollIntoView(section + dateInput);
-        setValue(section + dateInput, '1/1/2020');
-        checkSpecificValidation(section, calendarInputGroup, birthdayYearErrorMessage);
-        setValue(section + dateInput, '1/1/2019');
+        setValue(section + dateInput, incorrectBirthdayYear);
+        checkValidationMessage(section, calendarInputGroup, birthdayYearErrorMessage);
+        setValue(section + dateInput, correctBirthdayYear);
         expect(doesItExist(errorMessage)).toBe(false, 'error message exists');
     }
 
     function checkPermissionsValidation(section: string): void {
         scrollIntoView(section + radioButtonLabel, 1);
-        checkSpecificValidation(section, radioButtonLabel, termsErrorMesssage, 1);
+        checkValidationMessage(section, radioButtonLabel, termsErrorMesssage, 1);
         click(section + radioButtonLabel);
         expect(doesItExist(errorMessage)).toBe(false, 'error message exists');
     }
 
     function checkFrameworkValidation(section: string): void {
         scrollIntoView(section + radioButtonLabel);
-        checkSpecificValidation(section, radioButtonLabel, frameworkErrorMessage, 3);
-        checkSpecificValidation(section, radioButtonLabel, frameworkErrorMessage, 4);
+        checkValidationMessage(section, radioButtonLabel, frameworkErrorMessage, 3);
+        checkValidationMessage(section, radioButtonLabel, frameworkErrorMessage, 4);
         click(section + radioButtonLabel, 2);
         expect(doesItExist(errorMessage)).toBe(false, 'error message exists');
     }
 
-    function checkGeneralValidation(section: string): void {
+    function checkFormValidation(section: string): void {
         scrollIntoView(section);
         click(section + nameInput);
 
@@ -139,10 +197,10 @@ describe('Form generator test suite', function () {
 
         click(section + submitButton);
 
-        checkSpecificValidation(section, nameInput, requiredErrorMessage);
-        checkSpecificValidation(section, ageInput, requiredErrorMessage);
-        checkSpecificValidation(section, passwordInput, requiredErrorMessage);
-        checkSpecificValidation(section, calendarInputGroup, requiredErrorMessage);
+        checkValidationMessage(section, nameInput, requiredErrorMessage);
+        checkValidationMessage(section, ageInput, requiredErrorMessage);
+        checkValidationMessage(section, passwordInput, requiredErrorMessage);
+        checkValidationMessage(section, calendarInputGroup, requiredErrorMessage);
 
         if (section == defaultExample) {
             expect(getElementClass(section + mainSpecialitySelect)).toContain('is-error', 'element is not highlited by error');
@@ -156,7 +214,7 @@ describe('Form generator test suite', function () {
         }
     }
 
-    function checkSpecificValidation(section: string, item: string, message: string, i: number = 0): void {
+    function checkValidationMessage(section: string, item: string, message: string, i: number = 0): void {
         click(section + item, i);
         expect(isElementDisplayed(errorMessage)).toBe(true, 'error message is not displayed');
         expect(getText(errorMessage)).toEqual(message, 'error message is not match');

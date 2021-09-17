@@ -1,4 +1,64 @@
 
+### [0.32.1-rc.45](https://github.com/SAP/fundamental-ngx/compare/v0.32.1-rc.44...v0.32.1-rc.45) (2021-09-17)
+
+### [0.32.1-rc.44](https://github.com/SAP/fundamental-ngx/compare/v0.32.1-rc.43...v0.32.1-rc.44) (2021-09-16)
+
+
+### Bug Fixes
+
+* **platform:** remove unused module imports ([#6514](https://github.com/SAP/fundamental-ngx/issues/6514)) ([3ce9e0e](https://github.com/SAP/fundamental-ngx/commit/3ce9e0e919a13045beae68906f2f9d29a78e9513))
+
+### [0.32.1-rc.43](https://github.com/SAP/fundamental-ngx/compare/v0.32.1-rc.42...v0.32.1-rc.43) (2021-09-16)
+
+
+### Bug Fixes
+
+* **platform:** add link styling and i18n support ([#6530](https://github.com/SAP/fundamental-ngx/issues/6530)) ([0c74a20](https://github.com/SAP/fundamental-ngx/commit/0c74a202dbabfafd155a7ef8117ce93ee3449514))
+
+### [0.32.1-rc.42](https://github.com/SAP/fundamental-ngx/compare/v0.32.1-rc.41...v0.32.1-rc.42) (2021-09-16)
+
+### [0.32.1-rc.41](https://github.com/SAP/fundamental-ngx/compare/v0.32.1-rc.40...v0.32.1-rc.41) (2021-09-16)
+
+
+### Bug Fixes
+
+* **platform:** remove broken properties from wizard generator ([#6536](https://github.com/SAP/fundamental-ngx/issues/6536)) ([55a12f5](https://github.com/SAP/fundamental-ngx/commit/55a12f584a2212cf48fa131d736bfcc090d3c914))
+
+### [0.32.1-rc.40](https://github.com/SAP/fundamental-ngx/compare/v0.32.1-rc.39...v0.32.1-rc.40) (2021-09-16)
+
+
+### Bug Fixes
+
+* **platform:** fix failing unit tests ([#6393](https://github.com/SAP/fundamental-ngx/issues/6393)) ([305ad68](https://github.com/SAP/fundamental-ngx/commit/305ad68e692d0dc8bbda0d8ba6c71dce2b2fdd6e))
+
+### [0.32.1-rc.39](https://github.com/SAP/fundamental-ngx/compare/v0.32.1-rc.38...v0.32.1-rc.39) (2021-09-15)
+
+
+### Bug Fixes
+
+* **core:** add temporary style fix for action buttons in Timeline ([#6559](https://github.com/SAP/fundamental-ngx/issues/6559)) ([a845975](https://github.com/SAP/fundamental-ngx/commit/a84597524e4b5aeab46c28794c4229fcd6611b20))
+* **core:** fix bug with pagination itemsPerPage not updating correctly ([#6431](https://github.com/SAP/fundamental-ngx/issues/6431)) ([c4294f7](https://github.com/SAP/fundamental-ngx/commit/c4294f74339567dff279bfa20f9a6b8a4598b60a))
+
+### [0.32.1-rc.38](https://github.com/SAP/fundamental-ngx/compare/v0.32.1-rc.37...v0.32.1-rc.38) (2021-09-15)
+
+
+### Bug Fixes
+
+* **core:** rtl fix for connector margin ([#6555](https://github.com/SAP/fundamental-ngx/issues/6555)) ([4124db6](https://github.com/SAP/fundamental-ngx/commit/4124db6821c91d44e2f79106d0a5ca18e62e5f3e))
+
+### [0.32.1-rc.37](https://github.com/SAP/fundamental-ngx/compare/v0.32.1-rc.36...v0.32.1-rc.37) (2021-09-15)
+
+### [0.32.1-rc.36](https://github.com/SAP/fundamental-ngx/compare/v0.32.1-rc.35...v0.32.1-rc.36) (2021-09-15)
+
+### [0.32.1-rc.35](https://github.com/SAP/fundamental-ngx/compare/v0.32.1-rc.34...v0.32.1-rc.35) (2021-09-15)
+
+### [0.32.1-rc.34](https://github.com/SAP/fundamental-ngx/compare/v0.32.1-rc.33...v0.32.1-rc.34) (2021-09-15)
+
+
+### Features
+
+* **platform:** add automatic colons for the labels ([#6528](https://github.com/SAP/fundamental-ngx/issues/6528)) ([75cc019](https://github.com/SAP/fundamental-ngx/commit/75cc0192ac5e0e842926d5152a28fc3e88ac721d))
+
 ### [0.32.1-rc.33](https://github.com/SAP/fundamental-ngx/compare/v0.32.1-rc.32...v0.32.1-rc.33) (2021-09-14)
 
 ### [0.32.1-rc.32](https://github.com/SAP/fundamental-ngx/compare/v0.32.1-rc.31...v0.32.1-rc.32) (2021-09-14)

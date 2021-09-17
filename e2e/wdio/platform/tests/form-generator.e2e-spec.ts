@@ -18,7 +18,7 @@ import {
     birthdayYearErrorMessage, passwordConditionsErrorMessage
 } from '../fixtures/appData/form-generator-contents';
 import {
-    incorrectBirthdayYear, correctBirthdayYear, correctPassword, simplePassword
+    invalidBirthday,validBirthday, correctPassword, simplePassword
 } from '../fixtures/testData/form-generator';
 import { FormGeneratorPo } from '../pages/form-generator.po';
 
@@ -159,9 +159,9 @@ describe('Form generator test suite', function () {
 
     function checkBirthdayValidation(section: string): void {
         scrollIntoView(section + dateInput);
-        setValue(section + dateInput, incorrectBirthdayYear);
+        setValue(section + dateInput, invalidBirthday);
         checkValidationMessage(section, calendarInputGroup, birthdayYearErrorMessage);
-        setValue(section + dateInput, correctBirthdayYear);
+        setValue(section + dateInput,validBirthday);
         expect(doesItExist(errorMessage)).toBe(false, 'error message exists');
     }
 

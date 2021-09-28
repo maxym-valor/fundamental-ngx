@@ -1,4 +1,27 @@
 
+### [0.32.2-rc.12](https://github.com/SAP/fundamental-ngx/compare/v0.32.2-rc.11...v0.32.2-rc.12) (2021-09-27)
+
+
+### Bug Fixes
+
+* **platform:** table, fix sorting issue ([#6649](https://github.com/SAP/fundamental-ngx/issues/6649)) ([#6672](https://github.com/SAP/fundamental-ngx/issues/6672)) ([1545338](https://github.com/SAP/fundamental-ngx/commit/1545338548bea26d0233230627632df00fffb93e))
+
+### [0.32.2-rc.11](https://github.com/SAP/fundamental-ngx/compare/v0.32.2-rc.10...v0.32.2-rc.11) (2021-09-27)
+
+### [0.32.2-rc.10](https://github.com/SAP/fundamental-ngx/compare/v0.32.2-rc.9...v0.32.2-rc.10) (2021-09-27)
+
+
+### Bug Fixes
+
+* **core:** switch, fix a11y issues ([#6741](https://github.com/SAP/fundamental-ngx/issues/6741)) ([#6554](https://github.com/SAP/fundamental-ngx/issues/6554)) ([6e7bc48](https://github.com/SAP/fundamental-ngx/commit/6e7bc48bfe64510cdade9ecd57a3d9faf2aeb956))
+
+### [0.32.2-rc.9](https://github.com/SAP/fundamental-ngx/compare/v0.32.2-rc.8...v0.32.2-rc.9) (2021-09-27)
+
+
+### Bug Fixes
+
+* **core:** fix a11y issue for tab component ([#6705](https://github.com/SAP/fundamental-ngx/issues/6705)) ([0fe4f90](https://github.com/SAP/fundamental-ngx/commit/0fe4f9018871077110f87a9f767cb9a048bd84a1))
+
 ### [0.32.2-rc.8](https://github.com/SAP/fundamental-ngx/compare/v0.32.2-rc.7...v0.32.2-rc.8) (2021-09-27)
 
 ### [0.32.2-rc.7](https://github.com/SAP/fundamental-ngx/compare/v0.32.2-rc.6...v0.32.2-rc.7) (2021-09-27)

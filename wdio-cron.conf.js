@@ -145,6 +145,7 @@ exports.config = {
             './e2e/wdio/platform/**/file-uploader.e2e-spec.ts',
             './e2e/wdio/platform/**/form-container.e2e-spec.ts',
             './e2e/wdio/platform/**/form-generator.e2e-spec.ts',
+            './e2e/wdio/platform/**/icon-tab-bar.e2e-spec.ts',
             './e2e/wdio/platform/**/info-label.e2e-spec.ts',
             './e2e/wdio/platform/**/input.e2e-spec.ts',
             './e2e/wdio/platform/**/input-group.e2e-spec.ts',
@@ -228,7 +229,7 @@ exports.config = {
     // with `/`, the base url gets prepended, not including the path portion of your baseUrl.
     // If your `url` parameter starts without a scheme or `/` (like `some/path`), the base url
     // gets prepended directly.
-    // baseUrl: 'https://sap.dev:4200/',
+    baseUrl: 'https://sap.dev:4200/',
     //
     // Default timeout for all waitFor* commands.
     waitforTimeout: 30000,

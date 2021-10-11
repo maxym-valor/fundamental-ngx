@@ -1,6 +1,8 @@
 import { ChangeDetectorRef, Directive, EventEmitter, Input, OnChanges, Output, SimpleChanges, ViewChild } from '@angular/core';
 import { PopoverComponent } from '@fundamental-ngx/core/popover';
-import { IconTabBarItem } from '../../types';
+import { KeyUtil } from '@fundamental-ngx/core';
+import { ENTER, SPACE } from '@angular/cdk/keycodes';
+import { IconTabBarItem } from '../../interfaces/icon-tab-bar-item.interface';
 
 @Directive()
 export abstract class IconTabBarPopoverBase implements OnChanges {
@@ -69,5 +71,13 @@ export abstract class IconTabBarPopoverBase implements OnChanges {
     _selectItem(selectedItem: IconTabBarItem): void {
         this.selectedExtraItem.emit(selectedItem);
         this.popover.close();
+    }
+
+    /** @hidden */
+    _keyDownHandler(event: KeyboardEvent, tab: IconTabBarItem): void {
+        if (KeyUtil.isKeyCode(event, [SPACE, ENTER])) {
+            event.preventDefault();
+            this._selectItem(tab);
+        }
     }
 }

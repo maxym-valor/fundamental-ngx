@@ -14,8 +14,11 @@ import {
 import { take, takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 
-import { OverflowListDirective, cloneDeep } from '@fundamental-ngx/core/utils';
-import { IconTabBarItem, TabConfig } from '../types';
+import { OverflowListDirective, cloneDeep, KeyUtil } from '@fundamental-ngx/core/utils';
+import { ENTER, SPACE } from '@angular/cdk/keycodes';
+import { IconTabBarItem } from '../interfaces/icon-tab-bar-item.interface';
+import { TabConfig } from '../interfaces/tab-config.interface';
+import { TabDestinyMode } from '../types';
 import { ICON_TAB_HIDDEN_CLASS_NAME, UNIQUE_KEY_SEPARATOR } from '../constants';
 import { ExtraButtonDirective } from '../directives/extra-button/extra-button.directive';
 
@@ -34,6 +37,18 @@ export abstract class IconTabBarBase implements OnInit, OnChanges, OnDestroy {
      */
     @Input()
     isRtl: boolean;
+
+    /**
+     * @description densityMode setter triggers tabs to re-calculation overflowed tabs
+     */
+    @Input()
+    set densityMode(value: TabDestinyMode) {
+        // Skip first value && value doesn't equal to previous one
+        if (this._densityMode && value !== this._densityMode) {
+            this._triggerRecalculationVisibleItems();
+        }
+        this._densityMode = value;
+    }
 
     /**
      * @description Emits when some tab is selected.
@@ -64,6 +79,9 @@ export abstract class IconTabBarBase implements OnInit, OnChanges, OnDestroy {
 
     /** @hidden */
     _tabs: IconTabBarItem[] = [];
+
+    /** @hidden */
+    private _densityMode: TabDestinyMode;
 
     /** @hidden */
     private _onDestroy$ = new Subject();
@@ -157,6 +175,14 @@ export abstract class IconTabBarBase implements OnInit, OnChanges, OnDestroy {
         this._selectedUid = selectedItem.uId;
         selectedItem.badge = false;
         this.selected.emit(selectedItem)
+    }
+
+    /** @hidden */
+    _keyDownHandler(event: KeyboardEvent, tab: IconTabBarItem): void {
+        if (KeyUtil.isKeyCode(event, [SPACE, ENTER])) {
+            event.preventDefault();
+            this._selectItem(tab);
+        }
     }
 
     /**

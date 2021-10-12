@@ -1,4 +1,43 @@
 
+## 0.33.0-rc.11 (2021-10-12)
+
+## 0.33.0-rc.10 (2021-10-12)
+
+
+### Bug Fixes
+
+* **platform:** table, add missing doc ([#6707](https://github.com/SAP/fundamental-ngx/issues/6707)) ([#6710](https://github.com/SAP/fundamental-ngx/issues/6710)) ([b0768be](https://github.com/SAP/fundamental-ngx/commit/b0768bed8c7ad5afa5c2dc64f6d90942d2f5b55b))
+
+## 0.33.0-rc.9 (2021-10-12)
+
+
+### Features
+
+* **core:** added main functionality for timeline ([#6778](https://github.com/SAP/fundamental-ngx/issues/6778)) ([860fce1](https://github.com/SAP/fundamental-ngx/commit/860fce11418c531d691bf6ce85ae4105d9f521fe))
+
+## 0.33.0-rc.8 (2021-10-12)
+
+
+### Bug Fixes
+
+* **platform:** update API signature per spec ([#6864](https://github.com/SAP/fundamental-ngx/issues/6864)) ([265f575](https://github.com/SAP/fundamental-ngx/commit/265f5753c6386c026fd27fb9d1a85254b18f361c))
+
+## 0.33.0-rc.7 (2021-10-11)
+
+
+### Bug Fixes
+
+* **core:** dialog, keep only 1 non-transparent overlay ([#6852](https://github.com/SAP/fundamental-ngx/issues/6852)) ([f7e1024](https://github.com/SAP/fundamental-ngx/commit/f7e10247da4d54b4893608b1010018be0786ea2e))
+
+## 0.33.0-rc.6 (2021-10-11)
+
+
+### Features
+
+* **core,platform:** bring horizon theme ([#6873](https://github.com/SAP/fundamental-ngx/issues/6873)) ([4f650c4](https://github.com/SAP/fundamental-ngx/commit/4f650c48e58505efc6a954a33944f05449c6102d))
+
+## 0.33.0-rc.5 (2021-10-11)
+
 ## 0.33.0-rc.4 (2021-10-11)
 
 ## 0.33.0-rc.3 (2021-10-11)

@@ -2,6 +2,7 @@ import {
     click,
     elementArray,
     getCSSPropertyByName,
+    getElementArrayLength,
     getElementClass,
     getElementPlaceholder,
     getText,
@@ -31,7 +32,7 @@ const {
     activeDateTimePickerInput, disabledDateTimePickerInput, disabledDateTimePickerButton, cancelButton,
     okButton, selectedHours, selectedMinutes, navigationUpArrowButton, period,
     navigationDownArrowButton, timeItem, topPage, bottomPage, firstYearButton, firstMonthButton, selectMonthButton,
-    disabledFunctionExample, calendarContainer,
+    disabledFunctionExample, calendarContainer, buttonText
 } = new DateTimePicker();
 
 describe('Datetime picker suite', function () {
@@ -201,6 +202,17 @@ describe('Datetime picker suite', function () {
         click(okButton);
         expect(getValue(datePickerInput))
             .toEqual(date);
+    });
+
+    it('should check that OK buttons have correct text', () => {
+        const datepickerButtonsLength = getElementArrayLength(datePickerButton);
+        for (let i = 0; i < datepickerButtonsLength; i++) {
+            if (!getElementClass(datePickerButton, i).includes('disabled')) {
+                click(datePickerButton, i);
+                expect(getText(okButton + buttonText)).toEqual('OK');
+                click(okButton);
+            }
+        }
     });
 });
 

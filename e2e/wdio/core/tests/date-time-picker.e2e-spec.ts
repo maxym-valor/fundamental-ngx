@@ -34,7 +34,8 @@ describe('Datetime picker suite', function () {
         datePickerInput, topPage, selectYearButton, selectMonthButton, calendarYearsSection, disabledDateTimePickerButton,
         disabledDateTimePickerInput, okButton, filterCalendarValue, buttonSelectYearsRange, buttonFirstRangeYear, buttonFirstYear,
         buttonFirstMonth, selectedHours, selectedMinutes, navigationDownArrowButton, navigationUpArrowButton, timeItem, period,
-        cancelButton, buttonChange, optionButton, activeDay, dayInCalendarButtonByValue, getOptionById, datePickerGroup, calendarItem
+        cancelButton, buttonChange, optionButton, activeDay, dayInCalendarButtonByValue, getOptionById, datePickerGroup, calendarItem,
+        buttonText
     } = new DateTimePicker();
 
     beforeAll(() => {
@@ -251,6 +252,17 @@ describe('Datetime picker suite', function () {
                 click(okButton);
                 expect(getValue(datePickerInput, 7))
                     .toContain(dates[i]);
+            }
+        }
+    });
+
+    it('should check that OK buttons have correct text', () => {
+        const datepickerButtonsLength = getElementArrayLength(datePickerButton);
+        for (let i = 0; i < datepickerButtonsLength; i++) {
+            if (!getElementClass(datePickerButton, i).includes('disabled')) {
+                click(datePickerButton, i);
+                expect(getText(okButton + buttonText)).toEqual('OK');
+                click(okButton);
             }
         }
     });

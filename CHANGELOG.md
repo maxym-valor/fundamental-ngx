@@ -1,4 +1,29 @@
 
+## 0.33.0-rc.16 (2021-10-13)
+
+## 0.33.0-rc.15 (2021-10-13)
+
+
+### Features
+
+* **core:** add title for the bar component ([#6834](https://github.com/SAP/fundamental-ngx/issues/6834)) ([#6836](https://github.com/SAP/fundamental-ngx/issues/6836)) ([8897ecf](https://github.com/SAP/fundamental-ngx/commit/8897ecfe48558d7df65f56adf834f43ed0c11a9e))
+
+## 0.33.0-rc.14 (2021-10-13)
+
+## 0.33.0-rc.13 (2021-10-12)
+
+
+### Bug Fixes
+
+* **platform:** switch emits 3 times when changed manually ([#6828](https://github.com/SAP/fundamental-ngx/issues/6828)) ([#6833](https://github.com/SAP/fundamental-ngx/issues/6833)) ([99b8007](https://github.com/SAP/fundamental-ngx/commit/99b800732e4741669751e3bbcff53f3b617410eb))
+
+## 0.33.0-rc.12 (2021-10-12)
+
+
+### Bug Fixes
+
+* **core:** combobox, fix mobile mode ([#6820](https://github.com/SAP/fundamental-ngx/issues/6820)) ([88f6c75](https://github.com/SAP/fundamental-ngx/commit/88f6c75c64f0b384fea28f56e627d0b2c4bcbfaa))
+
 ## 0.33.0-rc.11 (2021-10-12)
 
 ## 0.33.0-rc.10 (2021-10-12)

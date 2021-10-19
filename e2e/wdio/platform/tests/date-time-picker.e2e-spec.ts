@@ -33,9 +33,37 @@ const {
     okButton, selectedHours, selectedMinutes, navigationUpArrowButton, period,
     navigationDownArrowButton, timeItem, topPage, bottomPage, firstYearButton, firstMonthButton, selectMonthButton,
     disabledFunctionExample, calendarContainer, buttonText
+    activeDateTimePickerButton,
+    datePickerButton,
+    datePickerInput,
+    calendarExpanded,
+    selectYearButton,
+    calendarYearsSection,
+    currentDay,
+    changeDateTimeValueButton,
+    compactDateTimePickerInput,
+    compactDateTimePickerButton,
+    activeDateTimePickerInput,
+    disabledDateTimePickerInput,
+    disabledDateTimePickerButton,
+    cancelButton,
+    okButton,
+    selectedHours,
+    selectedMinutes,
+    navigationUpArrowButton,
+    period,
+    navigationDownArrowButton,
+    timeItem,
+    topPage,
+    bottomPage,
+    firstYearButton,
+    firstMonthButton,
+    selectMonthButton,
+    disabledFunctionExample,
+    calendarContainer
 } = new DateTimePicker();
 
-describe('Datetime picker suite', function () {
+describe('Datetime picker suite', () => {
     dateTimePickerPage = new DateTimePicker();
 
     beforeAll(() => {
@@ -85,7 +113,8 @@ describe('Datetime picker suite', function () {
     it('Verify by default today date is focused', () => {
         const activeButtons = elementArray(activeDateTimePickerButton);
         for (let i = 0; i < activeButtons.length; i++) {
-            if (i !== 2 && i !== 7) {  // other default days in these calendars
+            if (i !== 2 && i !== 7) {
+                // other default days in these calendars
                 if (!getElementClass(activeDateTimePickerButton, i).includes('is-disabled')) {
                     sendKeys(['Escape']);
                     scrollIntoView(activeDateTimePickerButton, i);
@@ -118,23 +147,26 @@ describe('Datetime picker suite', function () {
         dateTimePickerPage.checkRtlSwitch();
     });
 
-    it('Verify The user can then choose the desired date from the calendar, and the time from the rotating wheel, ' +
-        'For the time, it’s possible to select hours, minutes, and even seconds.', () => {
+    it(
+        'Verify The user can then choose the desired date from the calendar, and the time from the rotating wheel, ' +
+            'For the time, it’s possible to select hours, minutes, and even seconds.',
+        () => {
             click(datePickerButton);
             click(dateTimePickerPage.dayInCalendarButtonByValue('1'));
             selectHoursAndMinutes();
             click(okButton);
-            expect(getValue(datePickerInput))
-                .toEqual(date);
-        });
+            expect(getValue(datePickerInput)).toEqual(date);
+        }
+    );
 
     it('verify selected date is showing in blue background', () => {
         click(activeDateTimePickerButton, 1);
         click(dateTimePickerPage.dayInCalendarButtonByValue('1'));
         click(okButton);
         click(activeDateTimePickerButton, 1);
-        expect(highlightedColor)
-            .toContain(getCSSPropertyByName(dateTimePickerPage.dayInCalendarButtonByValue('1'), 'background-color').value);
+        expect(highlightedColor).toContain(
+            getCSSPropertyByName(dateTimePickerPage.dayInCalendarButtonByValue('1'), 'background-color').value
+        );
     });
 
     it('Verify When the user selects cancel the action is aborted and the input field remains unchanged.', () => {
@@ -142,8 +174,7 @@ describe('Datetime picker suite', function () {
         click(dateTimePickerPage.dayInCalendarButtonByValue('1'));
         selectHoursAndMinutes();
         click(cancelButton);
-        expect(getValue(datePickerInput))
-            .not.toEqual(date);
+        expect(getValue(datePickerInput)).not.toEqual(date);
     });
 
     it('Verify disabled date time picker', () => {
@@ -166,7 +197,11 @@ describe('Datetime picker suite', function () {
         scrollIntoView(disabledFunctionExample + datePickerButton);
         click(disabledFunctionExample + datePickerButton);
         waitForElDisplayed(calendarContainer);
-        waitForUnclickable(dateTimePickerPage.dayInDisabledFunctionsCalendarByIndex((dateTimePickerPage.getCurrentDayIndex() - 1).toString()));
+        waitForUnclickable(
+            dateTimePickerPage.dayInDisabledFunctionsCalendarByIndex(
+                (dateTimePickerPage.getCurrentDayIndex() - 1).toString()
+            )
+        );
     });
 
     it('verify after the user selects a year, the view changes to the day view. The time remains the same. ', () => {
@@ -183,8 +218,7 @@ describe('Datetime picker suite', function () {
         waitForElDisplayed(dateTimePickerPage.filterCaledarValue('day'));
         scrollIntoView(datePickerButton, 2);
         click(okButton);
-        expect(getValue(datePickerInput, 1))
-            .toEqual(currentDate);
+        expect(getValue(datePickerInput, 1)).toEqual(currentDate);
     });
 
     it('Verify After the user clicks or taps a month, the view changes to the day view. The time remains the same.', () => {
@@ -200,8 +234,7 @@ describe('Datetime picker suite', function () {
         click(firstMonthButton);
         waitForElDisplayed(dateTimePickerPage.filterCaledarValue('day'));
         click(okButton);
-        expect(getValue(datePickerInput))
-            .toEqual(date);
+        expect(getValue(datePickerInput)).toEqual(date);
     });
 
     it('should check that OK buttons have correct text', () => {

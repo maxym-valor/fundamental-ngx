@@ -27,7 +27,7 @@ import { eight_lines_text, four_lines_text } from '../fixtures/testData/feed-inp
 
 describe('Verify Feed Input component', function () {
     const { feedInputAvatar, feedInputTextArea, feedInput, feedInputNoAvatar, feedInputButton, feedInputPlaceholder1, feedInputPlaceholder2 } = new FeedInputPo();
-
+    const feedInputPage = new FeedInputPo();
     beforeAll(() => {
         feedInputPage.open();
     }, 1);

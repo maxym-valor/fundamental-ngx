@@ -1,5 +1,5 @@
 import { CoreBaseComponentPo } from './core-base-component.po';
-import { waitForElDisplayed, waitForPresent} from '../../driver/wdio';
+import { waitForElDisplayed, waitForPresent } from '../../driver/wdio';
 
 export class SplitterPo extends CoreBaseComponentPo {
     private url = '/splitter';
@@ -12,7 +12,6 @@ export class SplitterPo extends CoreBaseComponentPo {
     resizer = '.fd-splitter__resizer';
     button = '.fd-button';
     paginationItem = this.sliderApiExample + '.fd-splitter__pagination-item';
-
 
     open(): void {
         super.open(this.url);

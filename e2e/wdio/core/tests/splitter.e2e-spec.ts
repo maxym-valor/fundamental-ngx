@@ -15,15 +15,8 @@ import {
 
 describe('Standard List test suite', function () {
     const splitterPage = new SplitterPo();
-    const {
-        basicExample,
-        splitterSection,
-        requiredWidthExample,
-        sliderApiExample,
-        button,
-        resizer,
-        paginationItem
-    } = splitterPage;
+    const { basicExample, splitterSection, requiredWidthExample, sliderApiExample, button, resizer, paginationItem } =
+        splitterPage;
 
     beforeAll(() => {
         splitterPage.open();
@@ -49,7 +42,10 @@ describe('Standard List test suite', function () {
             const firstNestedSectionHeight = getElementSize(basicExample + splitterSection, 5, 'height');
             clickAndMoveElement(basicExample + resizer, 0, -50, 3);
 
-            expect(getElementSize(basicExample + splitterSection, 5, 'height')).not.toEqual(firstNestedSectionHeight, 'height of section is not changed after resizing');
+            expect(getElementSize(basicExample + splitterSection, 5, 'height')).not.toEqual(
+                firstNestedSectionHeight,
+                'height of section is not changed after resizing'
+            );
         });
     });
 
@@ -88,11 +84,19 @@ describe('Standard List test suite', function () {
         const defaultSizesOfSections = getAttributeByNameArr(section + splitterSection, 'style');
 
         clickAndMoveElement(section + resizer, -200, 0);
-        expect(getAttributeByName(section + splitterSection, 'style')).not.toEqual(defaultSizesOfSections[0], 'width of section is not changed after resizing');
+        expect(getAttributeByName(section + splitterSection, 'style')).not.toEqual(
+            defaultSizesOfSections[0],
+            'width of section is not changed after resizing'
+        );
 
         clickAndMoveElement(section + resizer, 200, 0, 1);
-        expect(getAttributeByName(section + splitterSection, 'style', 1)).not.toEqual(defaultSizesOfSections[1], 'width of section is not changed after resizing');
-        expect(getAttributeByName(section + splitterSection, 'style', 2)).not.toEqual(defaultSizesOfSections[2], 'width of section is not changed after resizing');
+        expect(getAttributeByName(section + splitterSection, 'style', 1)).not.toEqual(
+            defaultSizesOfSections[1],
+            'width of section is not changed after resizing'
+        );
+        expect(getAttributeByName(section + splitterSection, 'style', 2)).not.toEqual(
+            defaultSizesOfSections[2],
+            'width of section is not changed after resizing'
+        );
     }
-
 });

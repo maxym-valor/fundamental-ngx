@@ -1,4 +1,113 @@
 
+## 0.33.0-rc.33 (2021-10-19)
+
+
+### Bug Fixes
+
+* **platform:** add more cols for labels in form items ([#6949](https://github.com/SAP/fundamental-ngx/issues/6949)) ([5a41d1f](https://github.com/SAP/fundamental-ngx/commit/5a41d1f554133df55811cdc81c2cde6f681ad1a5))
+
+## 0.33.0-rc.32 (2021-10-18)
+
+
+### Bug Fixes
+
+* **core:** bring the latest changes for grid layout ([#6946](https://github.com/SAP/fundamental-ngx/issues/6946)) ([91dee5f](https://github.com/SAP/fundamental-ngx/commit/91dee5fc7614f24ba40b446e798cf67464374fb4))
+
+## 0.33.0-rc.31 (2021-10-18)
+
+## 0.33.0-rc.30 (2021-10-18)
+
+
+### Bug Fixes
+
+* **core,platform:** fix mobile mode implementation ([#6886](https://github.com/SAP/fundamental-ngx/issues/6886)) ([b6add36](https://github.com/SAP/fundamental-ngx/commit/b6add36576f4a8d3cd6241b2472e3eb3f19bfe2b))
+
+## 0.33.0-rc.29 (2021-10-16)
+
+
+### Features
+
+* **fn:** add experimental library to fundamental-ngx ([#6924](https://github.com/SAP/fundamental-ngx/issues/6924)) ([e8537fe](https://github.com/SAP/fundamental-ngx/commit/e8537fec0f1abd5b6539dc7e423e5711f56abaeb))
+
+## 0.33.0-rc.28 (2021-10-15)
+
+
+### Bug Fixes
+
+* **core:** fix a11y issue for token component ([#6824](https://github.com/SAP/fundamental-ngx/issues/6824)) ([8ce8751](https://github.com/SAP/fundamental-ngx/commit/8ce8751ac9bee78043bd0a249dfa8f66b7f1eba6))
+
+## 0.33.0-rc.27 (2021-10-15)
+
+## 0.33.0-rc.26 (2021-10-14)
+
+
+### Bug Fixes
+
+* **platform:** baseInput CVAs emit extra event ([#6780](https://github.com/SAP/fundamental-ngx/issues/6780)) ([#6816](https://github.com/SAP/fundamental-ngx/issues/6816)) ([cb2b9dc](https://github.com/SAP/fundamental-ngx/commit/cb2b9dc0ffce9aa730aa0ab93b1a05407c51a29d))
+
+## 0.33.0-rc.25 (2021-10-14)
+
+## 0.33.0-rc.24 (2021-10-14)
+
+## 0.33.0-rc.23 (2021-10-14)
+
+
+### Bug Fixes
+
+* **platform:** combobox, fix states ([#6814](https://github.com/SAP/fundamental-ngx/issues/6814)) ([019dd33](https://github.com/SAP/fundamental-ngx/commit/019dd33d7905d34d36da6836d2309e3a3183ce2f))
+
+## 0.33.0-rc.22 (2021-10-14)
+
+
+### Bug Fixes
+
+* **core:** grid list layout ([#6896](https://github.com/SAP/fundamental-ngx/issues/6896)) ([468239e](https://github.com/SAP/fundamental-ngx/commit/468239eb4de2f2e9b6d8186d9f809f8f48200775))
+
+## 0.33.0-rc.21 (2021-10-14)
+
+
+### Features
+
+* **platform:** add onchange callback to form generator items ([#6883](https://github.com/SAP/fundamental-ngx/issues/6883)) ([d3a1255](https://github.com/SAP/fundamental-ngx/commit/d3a1255a7fe5789e983613a39a0e81e29cfc5011))
+
+## 0.33.0-rc.20 (2021-10-14)
+
+## 0.33.0-rc.19 (2021-10-14)
+
+
+### Bug Fixes
+
+* **core,platform:** jest issue ([#6894](https://github.com/SAP/fundamental-ngx/issues/6894)) ([9858290](https://github.com/SAP/fundamental-ngx/commit/985829091a698241d76a88526e07fb360672ab9e))
+
+## 0.33.0-rc.18 (2021-10-13)
+
+## 0.33.0-rc.17 (2021-10-13)
+
+## 0.33.0-rc.16 (2021-10-13)
+
+## 0.33.0-rc.15 (2021-10-13)
+
+
+### Features
+
+* **core:** add title for the bar component ([#6834](https://github.com/SAP/fundamental-ngx/issues/6834)) ([#6836](https://github.com/SAP/fundamental-ngx/issues/6836)) ([8897ecf](https://github.com/SAP/fundamental-ngx/commit/8897ecfe48558d7df65f56adf834f43ed0c11a9e))
+
+## 0.33.0-rc.14 (2021-10-13)
+
+## 0.33.0-rc.13 (2021-10-12)
+
+
+### Bug Fixes
+
+* **platform:** switch emits 3 times when changed manually ([#6828](https://github.com/SAP/fundamental-ngx/issues/6828)) ([#6833](https://github.com/SAP/fundamental-ngx/issues/6833)) ([99b8007](https://github.com/SAP/fundamental-ngx/commit/99b800732e4741669751e3bbcff53f3b617410eb))
+
+## 0.33.0-rc.12 (2021-10-12)
+
+
+### Bug Fixes
+
+* **core:** combobox, fix mobile mode ([#6820](https://github.com/SAP/fundamental-ngx/issues/6820)) ([88f6c75](https://github.com/SAP/fundamental-ngx/commit/88f6c75c64f0b384fea28f56e627d0b2c4bcbfaa))
+
 ## 0.33.0-rc.11 (2021-10-12)
 
 ## 0.33.0-rc.10 (2021-10-12)

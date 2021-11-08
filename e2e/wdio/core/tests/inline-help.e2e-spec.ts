@@ -1,8 +1,10 @@
 import {
     checkElementScreenshot,
     click,
+    doesItExist,
     getAttributeByName,
     getElementArrayLength,
+    isElementDisplayed,
     mouseHoverElement,
     saveElementScreenshot,
     scrollIntoView,
@@ -19,7 +21,8 @@ describe('Inline help test suite', () => {
         inlineHelpStyledIcon,
         inlineHelpTemplateExample,
         exampleAreaContainersArr,
-        inlineHelpExampleExtended
+        inlineHelpExampleExtended,
+        inlineHelp
     } = inlineHelpPage;
 
     beforeAll(() => {
@@ -97,6 +100,16 @@ describe('Inline help test suite', () => {
         );
 
         expect(diff).toBeLessThan(5, `Inline help template has mismatch percentage of ${diff}%`);
+    });
+
+    // skipped due to https://github.com/SAP/fundamental-ngx/issues/6398
+    xit('should check that inline help by hover does not work in other way after clicking button', () => {
+        scrollIntoView(inlineHelpIcons, 2);
+        mouseHoverElement(inlineHelpIcons, 2);
+        expect(isElementDisplayed(inlineHelp)).toBe(true);
+        click(inlineHelpIcons, 2);
+        mouseHoverElement(inlineHelpIcons, 2);
+        expect(isElementDisplayed(inlineHelp)).toBe(true);
     });
 
     xdescribe('Check visual regression', () => {

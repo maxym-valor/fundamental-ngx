@@ -26,7 +26,6 @@ import {
 import {
     acceptAlert,
     browserIsIE,
-    browserIsSafariorFF,
     click,
     getAlertText,
     getAttributeByName,
@@ -41,7 +40,9 @@ import {
     sendKeys,
     waitForElDisplayed,
     waitForInvisibilityOf,
-    pause
+    pause,
+    waitForNotPresent,
+    browserIsSafari
 } from '../../driver/wdio';
 
 describe('List test suite:', () => {
@@ -221,9 +222,8 @@ describe('List test suite:', () => {
         });
 
         it('should check scroll', () => {
-            // skip for FF due to issue https://github.com/SAP/fundamental-ngx/issues/4107
-            if (browserIsSafariorFF()) {
-                console.log('skip FF due to #4107, skip Safari');
+            if (browserIsSafari()) {
+                console.log('skip Safari');
                 return;
             }
             scrollIntoView(vScrollListItems);
@@ -232,8 +232,7 @@ describe('List test suite:', () => {
             sendKeys(['ArrowDown', 'ArrowDown', 'ArrowDown', 'ArrowDown', 'ArrowDown']);
             // pause to give the browser time to process actions and generate loading icons
             pause(650);
-            expect(waitForElDisplayed(vScrollLoadIcon)).toBe(true);
-            waitForInvisibilityOf(vScrollLoadIcon);
+            waitForNotPresent(vScrollLoadIcon);
             const itemsEndCount = getElementArrayLength(vScrollListItems);
             expect(itemsStartCount).not.toEqual(itemsEndCount);
         });

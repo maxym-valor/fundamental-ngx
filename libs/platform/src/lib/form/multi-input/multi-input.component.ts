@@ -1,6 +1,3 @@
-import { Direction } from '@angular/cdk/bidi';
-import { DOWN_ARROW, LEFT_ARROW, RIGHT_ARROW, UP_ARROW } from '@angular/cdk/keycodes';
-import { CdkConnectedOverlay } from '@angular/cdk/overlay';
 import {
     AfterViewInit,
     ChangeDetectionStrategy,
@@ -22,10 +19,10 @@ import {
     ViewEncapsulation
 } from '@angular/core';
 import { NgControl, NgForm } from '@angular/forms';
-import { takeUntil } from 'rxjs/operators';
+import { DOWN_ARROW, ESCAPE, UP_ARROW } from '@angular/cdk/keycodes';
 
 import { TokenizerComponent } from '@fundamental-ngx/core/token';
-import { DynamicComponentService, KeyUtil, RtlService } from '@fundamental-ngx/core/utils';
+import { DynamicComponentService, KeyUtil } from '@fundamental-ngx/core/utils';
 import { DialogConfig } from '@fundamental-ngx/core/dialog';
 import {
     DATA_PROVIDERS,
@@ -33,8 +30,7 @@ import {
     FormField,
     FormFieldControl,
     MultiInputDataSource,
-    MultiInputOption,
-    Status
+    MultiInputOption
 } from '@fundamental-ngx/platform/shared';
 import { ListComponent, SelectionType } from '@fundamental-ngx/platform/list';
 
@@ -45,6 +41,8 @@ import { PlatformMultiInputMobileComponent } from './multi-input-mobile/multi-in
 import { PlatformMultiInputMobileModule } from './multi-input-mobile/multi-input-mobile.module';
 import { MULTIINPUT_COMPONENT } from './multi-input.interface';
 import { MultiInputConfig } from './multi-input.config';
+import { PopoverFillMode } from '@fundamental-ngx/core/shared';
+let uniqueHiddenLabel = 0;
 
 @Component({
     selector: 'fdp-multi-input',
@@ -61,6 +59,12 @@ import { MultiInputConfig } from './multi-input.config';
     ]
 })
 export class PlatformMultiInputComponent extends BaseMultiInput implements OnInit, AfterViewInit {
+    protected tokenCountHiddenLabel = `fdp-multi-input-token-count-id-${uniqueHiddenLabel++}`;
+
+    /** token  count hidden label */
+    @Input()
+    tokenHiddenId: string = this.tokenCountHiddenLabel;
+
     /** type Represent the type of input used for the multi Input */
     @Input()
     type: InputType;
@@ -111,13 +115,25 @@ export class PlatformMultiInputComponent extends BaseMultiInput implements OnIni
         this._disabled = value;
     }
 
+    /**
+     * Preset options for the Select body width, whatever is chosen, the body has a 600px limit.
+     * `at-least` will apply a minimum width to the body equivalent to the width of the control. - Default
+     * `equal` will apply a width to the body equivalent to the width of the control.
+     * 'fit-content' will apply width needed to properly display items inside, independent of control.
+     */
     @Input()
-    get status(): Status {
-        return this._state;
-    }
-    set status(value: Status) {
-        this._state = value;
-    }
+    fillControlMode: PopoverFillMode = 'at-least';
+
+    /**
+     * The trigger events that will open/close the options popover.
+     * Accepts any [HTML DOM Events](https://www.w3schools.com/jsref/dom_obj_event.asp).
+     */
+    @Input()
+    triggers: string[] = [];
+
+    /** Whether the combobox should close, when a click is performed outside its boundaries. True by default */
+    @Input()
+    closeOnOutsideClick = true;
 
     /** @hidden */
     @ViewChild(TokenizerComponent)
@@ -130,13 +146,6 @@ export class PlatformMultiInputComponent extends BaseMultiInput implements OnIni
     /** @hidden */
     @ViewChild('listTemplate')
     listTemplate: TemplateRef<any>;
-
-    /** @hidden */
-    @ViewChild(CdkConnectedOverlay)
-    _connectedOverlay: CdkConnectedOverlay;
-
-    /** @hidden */
-    private _direction: Direction = 'ltr';
 
     constructor(
         /** @hidden */
@@ -160,14 +169,19 @@ export class PlatformMultiInputComponent extends BaseMultiInput implements OnIni
         /** @hidden */
         readonly _multiInputConfig: MultiInputConfig,
         /** @hidden */
-        @Optional() private _rtlService: RtlService,
-        /** @hidden */
         @Optional() @SkipSelf() @Host() formField: FormField,
         /** @hidden */
         @Optional() @SkipSelf() @Host() formControl: FormFieldControl<any>
     ) {
         super(cd, elementRef, ngControl, ngForm, dialogConfig, _multiInputConfig, formField, formControl);
     }
+
+    /** Display function. Accepts an object of the same type as the
+     * items passed to dropdownValues as argument, and outputs a string.
+     * An arrow function can be used to access the *this* keyword in the calling component.
+     * See multi input examples for details. */
+    @Input()
+    displayFn = (str: string) => str;
 
     /** @hidden */
     ngOnInit(): void {
@@ -184,18 +198,10 @@ export class PlatformMultiInputComponent extends BaseMultiInput implements OnIni
     ngAfterViewInit(): void {
         super.ngAfterViewInit();
 
-        this._rtlService?.rtl
-            .pipe(takeUntil(this._destroyed))
-            .subscribe((isRtl) => (this._direction = isRtl ? 'rtl' : 'ltr'));
-
-        if (this._connectedOverlay) {
-            this._connectedOverlay.attach
-                .pipe(takeUntil(this._destroyed))
-                .subscribe(() => this._connectedOverlay.overlayRef.setDirection(this._direction));
-        }
         if (this.mobile) {
             this._setUpMobileMode();
         }
+
         if (this.autofocus) {
             this.searchInputElement.nativeElement.focus();
         }
@@ -216,16 +222,9 @@ export class PlatformMultiInputComponent extends BaseMultiInput implements OnIni
             this.close();
         }
         this._updateModel(this.selected);
+        this.searchInputElement.nativeElement.focus();
         this.emitChangeEvent(value ? this.selected : null);
         this._cd.detectChanges();
-    }
-
-    /** @hidden Control Value Accessor */
-    writeValue(value: any[]): void {
-        if (value) {
-            super.writeValue(value);
-        }
-        this._cd.markForCheck();
     }
 
     /** @hidden */
@@ -252,6 +251,8 @@ export class PlatformMultiInputComponent extends BaseMultiInput implements OnIni
                 }
             });
         }
+        this._updateModel(this.selected);
+        this.searchInputElement.nativeElement.focus();
         this.close();
         if (this.selected.length < 10) {
             this.selectionMode = 'none';
@@ -264,17 +265,27 @@ export class PlatformMultiInputComponent extends BaseMultiInput implements OnIni
         this.selected.splice(this.selected.indexOf(token), 1);
         this.emitChangeEvent(token ? this.selected : null);
         this.searchInputElement.nativeElement.focus();
+        if (this.selected.length === 0) {
+            this._selected = null;
+        }
         this._updateModel(this.selected);
+        this._cd.markForCheck();
     }
 
     /** @hidden */
     removeSelectedTokens(event: KeyboardEvent): void {
         if (KeyUtil.isKeyCode(event, [DOWN_ARROW, UP_ARROW])) {
-            this.listTemplateDD.listItems.first.focus();
+            if (this.isOpen) {
+                this.listTemplateDD.listItems.first.focus();
+            } else {
+                this.showList(!this.isOpen);
+                this.searchInputElement.nativeElement.focus();
+            }
         }
-        if (KeyUtil.isKeyCode(event, [LEFT_ARROW, RIGHT_ARROW])) {
-            this.tokenizer.focusTokenElement(this.tokenizer.tokenList.length - 1);
+        if (KeyUtil.isKeyCode(event, [ESCAPE])) {
+            this.showList(false);
         }
+        this._cd.markForCheck();
     }
     /** @hidden Define is selected item selected */
     isSelectedOptionItem(selectedItem: any): boolean {
@@ -336,14 +347,8 @@ export class PlatformMultiInputComponent extends BaseMultiInput implements OnIni
 
     /** @hidden Handle dialog approval, closes popover and propagates data changes. */
     _dialogApprove(): void {
-        if (this.selected && this.selectedValue?.label === this.inputText) {
-            this._updateModel(this.selectedValue.value);
-        } else {
-            const optionItem = this._getSelectedOptionItem(this.inputText);
-
-            this._updateModel(optionItem ? optionItem.value : this.inputText);
-        }
-
+        this.onChange(this.selected);
+        this._updateModel(this.selected);
         this.showList(false);
     }
 

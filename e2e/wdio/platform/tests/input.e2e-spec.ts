@@ -13,6 +13,7 @@ import {
     getText,
     getTextArr,
     getValue,
+    isElementDisplayed,
     isEnabled,
     pause,
     refreshPage,
@@ -22,7 +23,13 @@ import {
     waitForElDisplayed,
     waitForPresent
 } from '../../driver/wdio';
-import { errorText, favoriteColor, labelsArray, placeholdersArray } from '../fixtures/appData/input-page-contents';
+import {
+    errorText,
+    favoriteColor,
+    labelsArray,
+    maxValidation,
+    placeholdersArray
+} from '../fixtures/appData/input-page-contents';
 import { autocompleteOption, longLine, number, special_characters, text } from '../fixtures/testData/input';
 import { InputPo } from '../pages/input.po';
 
@@ -46,7 +53,8 @@ describe('Input should ', () => {
         autocompleteInput,
         autocompleteInputLabel,
         autocompleteOptions,
-        disabledInputAttribute
+        disabledInputAttribute,
+        errorMessage
     } = inputPage;
 
     beforeAll(() => {
@@ -73,6 +81,7 @@ describe('Input should ', () => {
     it('have associated label element to describe its purpose', () => {
         expect(getTextArr(inputsLabels, 0, -2)).toEqual(labelsArray);
         expect(getText(inputsLabels, 8)).toContain(favoriteColor);
+        expect(getText(inputsLabels, 9)).toContain(maxValidation);
     });
 
     it('by default accept all kinds of input values – alphabet, numerical, special characters', () => {
@@ -178,6 +187,12 @@ describe('Input should ', () => {
         const compactHeight = getElementSize(compactInput);
 
         expect(defaultHeight.height).toBeGreaterThan(compactHeight.height);
+    });
+
+    it('should check that validation does not work earlier than necessary', () => {
+        scrollIntoView(messagesComponentsInput);
+        click(messagesComponentsInput);
+        expect(doesItExist(errorMessage)).toBe(false);
     });
 
     it('should check RTL', () => {

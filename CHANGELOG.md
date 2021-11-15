@@ -1,4 +1,20 @@
 
+## 0.33.0-rc.138 (2021-11-15)
+
+
+### Bug Fixes
+
+* **core:** feed list item more less button align ([#7138](https://github.com/SAP/fundamental-ngx/issues/7138)) ([62e8a46](https://github.com/SAP/fundamental-ngx/commit/62e8a46994ba0ed100b2654612a05ceb64e5a641))
+
+## 0.33.0-rc.137 (2021-11-15)
+
+
+### Bug Fixes
+
+* **core,platform:** select, fix wrapping and trucation styles ([#7163](https://github.com/SAP/fundamental-ngx/issues/7163)) ([219ae93](https://github.com/SAP/fundamental-ngx/commit/219ae93ae0075c3442fe4481389ec2b38c5dff7d))
+
+## 0.33.0-rc.136 (2021-11-14)
+
 ## 0.33.0-rc.135 (2021-11-12)
 
 ## 0.33.0-rc.134 (2021-11-12)

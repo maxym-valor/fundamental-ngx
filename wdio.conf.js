@@ -71,7 +71,8 @@ exports.config = {
             './e2e/wdio/platform/**/table.e2e-spec.ts',
             './e2e/wdio/platform/**/time-picker.e2e-spec.ts',
             './e2e/wdio/platform/**/upload-collection.e2e-spec.ts',
-            './e2e/wdio/platform/**/value-help-dialog.e2e-spec.ts'
+            './e2e/wdio/platform/**/value-help-dialog.e2e-spec.ts',
+            './e2e/wdio/platform/**/wizard-generator.e2e-spec.ts'
         ],
         coreA: [
             './e2e/wdio/core/**/action-bar.e2e-spec.ts',

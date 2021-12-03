@@ -78,7 +78,7 @@ export class TablePo extends BaseComponentPo {
     filterInput = 'fdp-filter-custom input';
     filterButtonOk = 'fd-dialog-footer button';
     filterResetButton = 'fdp-table-reset-button button';
-    allInputFields = 'fdp-search-field input';
+    allInputFields = 'fd-toolbar .fdp-search-field__input-group';
     sortableIcon = 'fdp-platform-table-sortable-example th';
     sortableOption = 'fd-popover-body .fd-list__item';
     sortablePopover = 'fd-popover-body';
@@ -92,7 +92,7 @@ export class TablePo extends BaseComponentPo {
         waitForPresent(this.tableDefaultExample);
     }
 
-    getScreenshotFolder(): object {
+    getScreenshotFolder(): Record<string, any> {
         return super.getScreenshotFolder(this.url);
     }
 

@@ -9,6 +9,7 @@ import {
     getText,
     getValue,
     isElementClickable,
+    pause,
     refreshPage,
     scrollIntoView,
     sendKeys,
@@ -146,6 +147,7 @@ describe('Upload collection test suite', () => {
         click(selector + tableItem);
         click(selector + checkbox, 1);
         click(selector + ghostButton);
+        pause(300);
         const folderName = getText(listItemTitle, 1);
         click(listItem, 1);
         click(moveButton);
@@ -250,6 +252,7 @@ describe('Upload collection test suite', () => {
         click(selector + transparentButton);
         setValue(dialogInputField, testFolder1);
         click(dialogCreateButton);
+        waitForNotDisplayed(selector + busyIndicator);
         expect(getText(selector + tableItemCount)).toBe('55');
         const countAfterAdd = getText(selector + tableItemCount);
         const countAfterAddNum = Number(countAfterAdd);
